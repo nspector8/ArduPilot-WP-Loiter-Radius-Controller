@@ -177,3 +177,40 @@ The Lua script modifies the ArduPilot parameter:
 The OSD firmware modification displays the active value directly from the parameter, allowing the pilot to verify loiter radius and direction in flight.
 
 This project is provided as a community resource for ArduPilot users interested in dynamic loiter radius control.
+
+------------------------------------------------------------------------
+
+Firmware Compatibility
+
+The included firmware:
+
+Firmware/arduplane-WPLR-OSD.apj
+
+It is a custom ArduPlane 4.7.x build created for the TBS H7 Lucid Wing flight controller.
+
+This firmware is a working example build and should only be installed on
+compatible hardware.
+
+Users with other ArduPilot-supported flight controllers should build
+their own firmware using the documented AP_OSD modification.
+
+See:
+
+-   Documentation/FIRMWARE_COMPATIBILITY.md
+-   Documentation/BUILDING_CUSTOM_FIRMWARE.md
+-   Patches/AP_OSD_Screen.cpp.patch
+
+The Lua script:
+
+Lua/LRAD.lua
+
+is hardware independent and can be used on supported ArduPlane vehicles
+with Lua scripting enabled.
+
+The firmware modification is limited to the AP_OSD implementation and:
+
+-   Reads the active WP_LOITER_RAD value
+-   Preserves the positive or negative direction sign
+-   Converts meters to feet
+-   Displays the loiter radius through DisplayPort OSD
+

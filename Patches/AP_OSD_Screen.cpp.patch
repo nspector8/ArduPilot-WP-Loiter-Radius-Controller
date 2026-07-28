@@ -1,0 +1,30 @@
+# AP_OSD WP_LOITER_RAD sign preservation patch
+
+File modified:
+
+libraries/AP_OSD/AP_OSD_Screen.cpp
+
+Purpose:
+
+Preserve the positive or negative sign of WP_LOITER_RAD in the OSD display.
+
+Original behavior:
+
+- Used fabsf() which removed the direction sign.
+- Display formatting forced a three-digit positive value.
+
+Modified behavior:
+
+- Keeps the sign from WP_LOITER_RAD.
+- Displays right-hand loiters as positive values.
+- Displays left-hand loiters as negative values.
+
+
+--- a/libraries/AP_OSD/AP_OSD_Screen.cpp
++++ b/libraries/AP_OSD/AP_OSD_Screen.cpp
+
+-    radius_ft = (int)(fabsf((float)loiter_rad->get()) * 3.28084f);
++    radius_ft = (int)((float)loiter_rad->get() * 3.28084f);
+
+-    backend->write(x, y, false, "R:%03d", radius_ft);
++    backend->write(x, y, false, "R:%d", radius_ft);
