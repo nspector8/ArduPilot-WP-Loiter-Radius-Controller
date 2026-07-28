@@ -186,7 +186,7 @@ The included firmware:
 
 Firmware/arduplane-WPLR-OSD.apj
 
-It is a custom ArduPlane 4.7.x build created for the TBS H7 Lucid Wing flight controller.
+is a custom ArduPlane 4.7.x build created for the TBS H7 Lucid Wing flight controller.
 
 This firmware is a working example build and should only be installed on
 compatible hardware.
