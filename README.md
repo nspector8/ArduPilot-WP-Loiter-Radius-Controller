@@ -69,16 +69,6 @@ Left-hand loiter:
 
     R:-590
 
-OSD examples:
-
-Right-hand loiter:
-
-    R:590
-
-Left-hand loiter:
-
-    R:-590
-
 
 ---
 
