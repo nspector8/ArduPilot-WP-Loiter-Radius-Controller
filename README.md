@@ -188,7 +188,7 @@ See:
 
 -   Documentation/FIRMWARE_COMPATIBILITY.md
 -   Documentation/BUILDING_CUSTOM_FIRMWARE.md
--   Patches/AP_OSD_Screen.cpp.patch
+-   Patches/WP_LOITER_RAD_OSD.patch
 
 The Lua script:
 
