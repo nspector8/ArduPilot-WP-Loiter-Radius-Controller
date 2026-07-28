@@ -48,11 +48,11 @@ Reload environment:
 
 Copy the patch from this project:
 
-Patches/AP_OSD_Screen.cpp.patch
+Patches/WP_LOITER_RAD_OSD.patch
 
 Apply it:
 
-git apply /path/to/AP_OSD_Screen.cpp.patch
+git apply /path/to/WP_LOITER_RAD_OSD.patch
 
 The patch modifies the ArduPilot OSD to:
 
