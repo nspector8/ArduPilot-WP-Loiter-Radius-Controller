@@ -1,0 +1,22 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+
+This project is licensed under the GNU General Public License version 3
+(GPL-3.0).
+
+
+The firmware component of this project is derived from ArduPilot and is
+distributed under the same GPL-3.0 license.
+
+
+The Lua script included in this project is provided under GPL-3.0 to remain
+compatible with the ArduPilot ecosystem.
+
+
+This software is provided without warranty of any kind.
+
+
+For the full license text, see:
+
+https://www.gnu.org/licenses/gpl-3.0.html
