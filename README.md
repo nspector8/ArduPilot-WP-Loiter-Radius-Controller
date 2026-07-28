@@ -42,12 +42,32 @@ Left-hand loiter:
 
 A custom ArduPlane firmware modification adds a loiter radius display element to the OSD.
 
+The modification allows the pilot to see the active `WP_LOITER_RAD` value directly in the FPV display while preserving the direction of the loiter.
+
 The OSD display:
 
-- Reads the current `WP_LOITER_RAD` value
-- Converts meters to feet
+- Reads the current `WP_LOITER_RAD` parameter
+- Converts the radius from meters to feet
 - Preserves the positive or negative direction sign
-- Allows the pilot to verify loiter size and direction directly from the FPV display
+- Displays positive values for right-hand loiters
+- Displays negative values for left-hand loiters
+- Allows the pilot to verify loiter size and direction during flight
+
+Firmware build:
+
+- Based on ArduPlane 4.7.x
+- Custom AP_OSD modification for loiter radius display
+- Compatible with DisplayPort OSD systems
+
+OSD examples:
+
+Right-hand loiter:
+
+    R:590
+
+Left-hand loiter:
+
+    R:-590
 
 OSD examples:
 
@@ -66,11 +86,21 @@ Left-hand loiter:
 
 Aircraft:
 
+AtomRC Swordfish
+
+Flight Controller:
+
 TBS Lucid H7 Wing
 
 Video / OSD System:
 
-Walksnail Moonlight DisplayPort
+Walksnail Avatar Goggles X
+
+Walksnail Avatar Moonlight VTX
+
+Connection: 
+
+DisplayPort OSD integration
 
 
 ---
