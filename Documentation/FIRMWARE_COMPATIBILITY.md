@@ -58,6 +58,7 @@ Firmware Modification
 The firmware modification changes:
 
 libraries/AP_OSD/AP_OSD.h
+
 libraries/AP_OSD/AP_OSD_Screen.cpp
 
 These changes add a configurable WP_LOITER_RAD OSD element and the drawing logic required to display the active loiter radius through supported DisplayPort OSD systems.
