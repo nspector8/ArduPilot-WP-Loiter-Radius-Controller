@@ -2,69 +2,69 @@ Building Custom ArduPlane Firmware
 
 Overview
 
-The included firmware file:
+The included firmware:
 
 Firmware/arduplane-WPLR-OSD.apj
 
-was built specifically for the TBS H7 Lucid Wing flight controller.
+was built for the TBS H7 Lucid Wing flight controller.
 
-Users with other ArduPilot-supported flight controllers should build
-their own firmware using the AP_OSD modification included in this
-project.
+If you use a different ArduPilot-supported flight controller, you can
+create your own .apj file using the patch included in this project.
 
 ------------------------------------------------------------------------
 
 Requirements
 
-A Linux build environment is recommended.
+You will need:
 
-Required:
-
--   ArduPilot source code
--   Python build tools
+-   Ubuntu Linux (or WSL2)
 -   Git
--   Waf build system
+-   ArduPilot source code
+-   ArduPilot build tools
 
 ------------------------------------------------------------------------
 
-Clone ArduPilot Source
+1. Download ArduPilot Source
 
-Clone the ArduPilot repository:
+Clone ArduPilot:
 
 git clone https://github.com/ArduPilot/ardupilot.git
 
-Enter the source directory:
+Enter the folder:
 
 cd ardupilot
 
+Install build requirements:
+
+Tools/environment_install/install-prereqs-ubuntu.sh -y
+
+Reload environment:
+
+. ~/.profile
+
 ------------------------------------------------------------------------
 
-Apply the OSD Modification
+2. Apply the WP_LOITER_RAD OSD Patch
 
-The modification affects:
-
-libraries/AP_OSD/AP_OSD_Screen.cpp
-
-The patch file included with this project:
+Copy the patch from this project:
 
 Patches/AP_OSD_Screen.cpp.patch
 
-shows the required changes.
+Apply it:
 
-The modification:
+git apply /path/to/AP_OSD_Screen.cpp.patch
 
--   Reads WP_LOITER_RAD
--   Preserves the positive or negative sign
--   Converts meters to feet
--   Displays the loiter radius in DisplayPort OSD
+The patch modifies the ArduPilot OSD to:
+
+-   Display WP_LOITER_RAD
+-   Preserve positive and negative direction
+-   Convert meters to feet
 
 ------------------------------------------------------------------------
 
-Select Your Flight Controller
+3. Select Your Flight Controller
 
-Configure ArduPilot for your specific hardware.
-
-Example:
+Configure ArduPilot for your hardware:
 
 ./waf configure –board
 
@@ -74,38 +74,56 @@ with your flight controller target.
 
 Examples:
 
-CubeOrange matekh743
+CubeOrange
 
-Refer to the ArduPilot documentation for supported board names.
+matekh743
 
 ------------------------------------------------------------------------
 
-Build ArduPlane
+4. Build ArduPlane
 
 Build the firmware:
 
 ./waf plane
 
-The resulting firmware file will be created for your selected hardware
-target.
+Your new firmware will be created in:
+
+build//bin/
+
+The output file will be:
+
+arduplane.apj
 
 ------------------------------------------------------------------------
 
-Install Firmware
+5. Install Firmware
 
 Install the generated .apj file using Mission Planner or another
-supported ArduPilot firmware installation method.
+supported ArduPilot firmware tool.
 
 ------------------------------------------------------------------------
 
-Notes
+Lua Script
 
 The Lua script:
 
 Lua/LRAD.lua
 
-is hardware independent and can be used on any supported ArduPlane
-vehicle with Lua scripting enabled.
+is hardware independent.
 
-The included firmware file is only one example build for the TBS H7
-Lucid Wing.
+Copy it to:
+
+/APM/scripts/
+
+Enable scripting and configure your RC knob as described in:
+
+Documentation/INSTALLATION.md
+
+------------------------------------------------------------------------
+
+Notes
+
+The included .apj file is only an example build.
+
+The Lua script can be used on any supported ArduPlane vehicle with Lua
+scripting enabled.
