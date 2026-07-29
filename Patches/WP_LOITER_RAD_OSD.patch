@@ -1,16 +1,17 @@
 diff --git a/libraries/AP_OSD/AP_OSD.h b/libraries/AP_OSD/AP_OSD.h
-index 847eb6d48e..e00b29d831 100644
+index 847eb6d48e..ac4caee3ea 100644
 --- a/libraries/AP_OSD/AP_OSD.h
 +++ b/libraries/AP_OSD/AP_OSD.h
-@@ -216,6 +216,7 @@ private:
+@@ -216,6 +216,8 @@ private:
  #endif
      AP_OSD_Setting hdop;
      AP_OSD_Setting waypoint;
 +    AP_OSD_Setting loiter_radius;
++    AP_Int8 loiter_radius_units;
      AP_OSD_Setting xtrack_error;
      AP_OSD_Setting dist{false,22,11};
      AP_OSD_Setting stat{false,0,0};
-@@ -318,6 +319,7 @@ private:
+@@ -318,6 +320,7 @@ private:
  #endif
      void draw_hdop(uint8_t x, uint8_t y);
      void draw_waypoint(uint8_t x, uint8_t y);
@@ -19,7 +20,7 @@ index 847eb6d48e..e00b29d831 100644
      void draw_dist(uint8_t x, uint8_t y);
      void draw_stat(uint8_t x, uint8_t y);
 diff --git a/libraries/AP_OSD/AP_OSD_Screen.cpp b/libraries/AP_OSD/AP_OSD_Screen.cpp
-index 97e3831b2d..6d7b8b1a66 100644
+index 97e3831b2d..a5062db859 100644
 --- a/libraries/AP_OSD/AP_OSD_Screen.cpp
 +++ b/libraries/AP_OSD/AP_OSD_Screen.cpp
 @@ -43,6 +43,7 @@
@@ -30,7 +31,7 @@ index 97e3831b2d..6d7b8b1a66 100644
  #include <AP_RPM/AP_RPM.h>
  #include <AP_MSP/AP_MSP.h>
  #if APM_BUILD_TYPE(APM_BUILD_Rover)
-@@ -1045,6 +1046,22 @@ const AP_Param::GroupInfo AP_OSD_Screen::var_info[] = {
+@@ -1045,6 +1046,27 @@ const AP_Param::GroupInfo AP_OSD_Screen::var_info[] = {
  	AP_SUBGROUPINFO(rrpm, "RPM", 62, AP_OSD_Screen, AP_OSD_Setting),
  #endif
  
@@ -49,11 +50,16 @@ index 97e3831b2d..6d7b8b1a66 100644
 +    // @Description: Vertical position on screen
 +    // @Range: 0 21
 +    AP_SUBGROUPINFO(loiter_radius, "LOITRAD", 63, AP_OSD_Screen, AP_OSD_Setting),
++    // @Param: LOITRAD_UNITS
++    // @DisplayName: Loiter Radius Units
++    // @Description: Units used for the OSD loiter radius display
++    // @Values: 0:Feet,1:Meters
++    AP_GROUPINFO("LOITRAD_UNITS", 64, AP_OSD_Screen, loiter_radius_units, 0),
 +
      AP_GROUPEND
  };
  
-@@ -2273,6 +2290,21 @@ void AP_OSD_Screen::draw_waypoint(uint8_t x, uint8_t y)
+@@ -2273,6 +2295,28 @@ void AP_OSD_Screen::draw_waypoint(uint8_t x, uint8_t y)
      draw_distance(x+4, y, osd->nav_info.wp_distance);
  }
  
@@ -63,19 +69,26 @@ index 97e3831b2d..6d7b8b1a66 100644
 +    AP_Int16 *loiter_rad =
 +        (AP_Int16 *)AP_Param::find("WP_LOITER_RAD", &ptype);
 +
-+    int radius_ft = 0;
++    int radius_display = 0;
 +
 +    if (loiter_rad != nullptr) {
-+        radius_ft = (int)((float)loiter_rad->get() * 3.28084f);
++
++        if (loiter_radius_units == 0) {
++            radius_display =
++                (int)((float)loiter_rad->get() * 3.28084f);
++        } else {
++            radius_display =
++                loiter_rad->get();
++        }
 +    }
 +
-+    backend->write(x, y, false, "R:%d", radius_ft);
++    backend->write(x, y, false, "R:%d", radius_display);
 +}
 +
  void AP_OSD_Screen::draw_xtrack_error(uint8_t x, uint8_t y)
  {
      backend->write(x, y, false, "%c", SYMBOL(SYM_XERR));
-@@ -2578,6 +2610,7 @@ void AP_OSD_Screen::draw(void)
+@@ -2578,6 +2622,7 @@ void AP_OSD_Screen::draw(void)
      DRAW_SETTING(rngf);
  #endif
      DRAW_SETTING(waypoint);

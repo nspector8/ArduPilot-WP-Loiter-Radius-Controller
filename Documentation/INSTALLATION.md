@@ -101,6 +101,19 @@ Set to 1 when using the WP_LOITER_RAD OSD display through FPV goggles to reduce 
 
 Example: WPLR_GCS_MSG = 1
 
+### OSD Loiter Radius Units
+
+The custom firmware OSD loiter radius display units are controlled by:
+
+`LOITRAD_UNITS`
+
+Values:
+
+- `0` = Feet (default)
+- `1` = Meters
+
+This parameter only affects the OSD loiter radius display. It is independent of the Lua script `WPLR_UNITS` parameter, which controls GCS text message units.
+
 Loiter Direction
 
 ArduPilot uses the sign of WP_LOITER_RAD to determine loiter direction.

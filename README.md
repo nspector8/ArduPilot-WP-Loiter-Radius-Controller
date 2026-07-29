@@ -48,11 +48,22 @@ The modification allows the pilot to see the active `WP_LOITER_RAD` value direct
 The OSD display:
 
 - Reads the current `WP_LOITER_RAD` parameter
-- Converts the radius from meters to feet
+- Displays the radius using the selected OSD units
 - Preserves the positive or negative direction sign
 - Displays positive values for right-hand loiters
 - Displays negative values for left-hand loiters
 - Allows the pilot to verify loiter size and direction during flight
+
+The OSD display units are controlled by the firmware parameter:
+
+`LOITRAD_UNITS`
+
+Values:
+
+- `0` = Feet (default)
+- `1` = Meters
+
+This parameter only affects the OSD loiter radius display.
 
 Firmware build:
 
