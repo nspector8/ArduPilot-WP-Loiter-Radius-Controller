@@ -24,6 +24,7 @@ Features:
 - Increasing knob position always increases the physical loiter circle size
 - Deadzone protection reduces unnecessary parameter updates
 - GCS messages display the current radius in feet
+- Optional GCS radius messages (can be disabled when using FPV goggles with OSD)
 
 GCS examples:
 
@@ -111,6 +112,21 @@ Configure:
     WPLR_MIN_RADIUS
     WPLR_MAX_RADIUS
     WPLR_RADIUS_DZ
+
+### GCS Message Control
+
+The Lua script can send the current `WP_LOITER_RAD` value through GCS text messages.
+
+The parameter `WPLR_GCS_MSG` controls these notifications:
+
+- `0` = GCS messages ON (default)
+- `1` = GCS messages OFF
+
+When using FPV goggles with the AP_OSD WP_LOITER_RAD display, set:
+
+WPLR_GCS_MSG = 1
+
+to prevent duplicate radius notifications. The OSD display will continue to operate normally.
 
 Assign:
 
