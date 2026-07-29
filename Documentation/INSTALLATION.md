@@ -8,35 +8,60 @@ The project consists of two components:
 
 ### LRAD.lua
 
-Standalone Lua script that provides:
+A standalone ArduPilot Lua script that provides:
 
 * RC transmitter control of `WP_LOITER_RAD`
 * Dynamic in-flight loiter radius adjustment
 * Direction-preserving radius control
+* Optional GCS radius notifications
 
-The Lua script can be used with standard ArduPilot firmware.
+The Lua script can be used with supported ArduPlane vehicles and does **not** require custom firmware.
 
 ### arduplane-WPLR-OSD.apj
 
-Optional custom ArduPlane firmware that adds:
+An optional custom ArduPlane firmware build that adds:
 
 * OSD loiter radius display
 * Loiter direction indication
 * Selectable OSD display units
 
+The included firmware is a **hardware-specific example build** created for the:
+
+* TBS LUCID H7 WING flight controller
+
+It should only be installed on compatible TBS LUCID H7 WING hardware.
+
+Users with other ArduPilot-supported flight controllers should build their own firmware using:
+
+```text
+Patches/WP_LOITER_RAD_OSD.patch
+```
+
 ---
 
 # Requirements
 
+## Lua Script
+
 Required:
 
-* ArduPlane 4.7.x or compatible
-* Lua scripting enabled
+* ArduPlane with Lua scripting enabled
+* Compatible ArduPilot vehicle
 
-Optional OSD features:
+## Optional OSD Firmware
 
-* Custom firmware
+Required:
+
+* TBS LUCID H7 WING (for included firmware)
 * DisplayPort OSD support
+
+The included firmware:
+
+```text
+Firmware/arduplane-WPLR-OSD.apj
+```
+
+is not intended as a universal ArduPilot firmware file.
 
 ---
 
@@ -54,6 +79,8 @@ Copy to:
 /APM/scripts/
 ```
 
+on the aircraft SD card.
+
 After installation:
 
 1. Reboot the flight controller.
@@ -70,9 +97,15 @@ WPLR: Loaded
 
 ## Enable Lua
 
+Set:
+
 ```text
 SCR_ENABLE = 1
 ```
+
+Reboot the flight controller after enabling scripting.
+
+---
 
 ## Assign Transmitter Control
 
@@ -94,13 +127,13 @@ WP_LOITER_RAD
 
 # Lua Parameters
 
-| Parameter       | Description                      |
-| --------------- | -------------------------------- |
-| WPLR_MIN_RADIUS | Minimum allowed loiter radius    |
-| WPLR_MAX_RADIUS | Maximum allowed loiter radius    |
-| WPLR_RADIUS_DZ  | Radius update deadzone           |
-| WPLR_GCS_MSG    | Enable/disable GCS notifications |
-| WPLR_UNITS      | GCS message units                |
+| Parameter         | Description                      |
+| ----------------- | -------------------------------- |
+| `WPLR_MIN_RADIUS` | Minimum allowed loiter radius    |
+| `WPLR_MAX_RADIUS` | Maximum allowed loiter radius    |
+| `WPLR_RADIUS_DZ`  | Radius update deadzone           |
+| `WPLR_GCS_MSG`    | Enable/disable GCS notifications |
+| `WPLR_UNITS`      | GCS message units                |
 
 Example:
 
@@ -120,7 +153,7 @@ The parameter:
 WPLR_GCS_MSG
 ```
 
-controls radius notifications.
+controls radius notifications sent through GCS messages.
 
 Values:
 
@@ -129,19 +162,56 @@ Values:
 1 = GCS messages OFF
 ```
 
-When using the OSD display with FPV goggles, set:
+When using the OSD loiter radius display with FPV goggles, set:
 
 ```text
 WPLR_GCS_MSG = 1
 ```
 
-to avoid duplicate notifications.
+to prevent duplicate radius notifications.
+
+The OSD display will continue to operate normally.
 
 ---
 
 # Optional OSD Firmware Installation
 
-For pilots who want FPV display confirmation, install:
+The OSD loiter radius display requires the custom firmware modification.
+
+## Important Hardware Notice
+
+The included firmware:
+
+```text
+Firmware/arduplane-WPLR-OSD.apj
+```
+
+was built specifically for:
+
+```text
+TBS LUCID H7 WING
+```
+
+Do **not** install this firmware on other flight controllers.
+
+For other ArduPilot-supported boards:
+
+1. Build compatible ArduPlane firmware.
+2. Apply the AP_OSD modification patch:
+
+```text
+Patches/WP_LOITER_RAD_OSD.patch
+```
+
+3. Flash the resulting firmware.
+
+---
+
+## Installing the Provided Firmware
+
+For compatible TBS LUCID H7 WING controllers:
+
+Flash:
 
 ```text
 Firmware/arduplane-WPLR-OSD.apj
@@ -149,7 +219,11 @@ Firmware/arduplane-WPLR-OSD.apj
 
 using Mission Planner or another compatible ArduPilot flashing tool.
 
-After flashing, configure the OSD element and units.
+After flashing:
+
+1. Allow the flight controller to reboot.
+2. Confirm normal vehicle operation.
+3. Configure the OSD display.
 
 ---
 
@@ -170,7 +244,7 @@ Values:
 1 = Meters
 ```
 
-This parameter only affects the OSD display.
+This parameter only affects the OSD loiter radius display.
 
 It is independent from:
 
@@ -190,7 +264,7 @@ ArduPilot uses the sign of:
 WP_LOITER_RAD
 ```
 
-to determine direction.
+to determine loiter direction.
 
 Positive value:
 
@@ -208,7 +282,7 @@ WP_LOITER_RAD = -180
 
 Creates a left-hand loiter.
 
-The Lua script preserves this behavior while ensuring increasing knob position increases the physical loiter circle size.
+The Lua script preserves this behavior while ensuring increasing transmitter knob position always increases the physical loiter circle size.
 
 ---
 
@@ -240,7 +314,7 @@ R:-590
 
 Before flight testing:
 
-1. Confirm Lua script loads.
+1. Confirm the Lua script loads.
 2. Move the transmitter knob.
 3. Verify GCS radius updates.
 
@@ -256,7 +330,7 @@ or:
 WPLR: -300
 ```
 
-If using OSD firmware:
+If using the custom OSD firmware:
 
 Confirm the OSD matches the active radius.
 
@@ -285,4 +359,7 @@ Before operational flight, verify:
 * Correct loiter direction
 * Correct radius scaling
 * Correct RC control operation
-* Correct OSD display behavior
+* Correct GCS message behavior
+* Correct OSD display behavior (if using custom firmware)
+
+Always perform initial testing in a controlled environment.
