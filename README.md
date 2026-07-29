@@ -107,6 +107,7 @@ to the ArduPilot scripts directory on the aircraft.
 
 Configure:
 
+    WPLR_GCS_MSG
     WPLR_MIN_RADIUS
     WPLR_MAX_RADIUS
     WPLR_RADIUS_DZ

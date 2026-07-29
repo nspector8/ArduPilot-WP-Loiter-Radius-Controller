@@ -90,6 +90,17 @@ WPLR_RADIUS_DZ
 
 Example: WPLR_RADIUS_DZ = 2
 
+WPLR_GCS_MSG
+
+Controls WPLR GCS text notifications.
+
+0 = GCS messages ON (default)
+1 = GCS messages OFF
+
+Set to 1 when using the WP_LOITER_RAD OSD display through FPV goggles to reduce duplicate telemetry notifications.
+
+Example: WPLR_GCS_MSG = 1
+
 Loiter Direction
 
 ArduPilot uses the sign of WP_LOITER_RAD to determine loiter direction.
