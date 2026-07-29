@@ -15,6 +15,7 @@ A standalone ArduPilot Lua script that provides:
 * Direction-preserving radius control
 * Optional GCS radius notifications
 * Selectable display units
+  
 The Lua script can be used with supported ArduPlane vehicles and does **not** require custom firmware.
 
 ### arduplane-WPLR-OSD.apj
