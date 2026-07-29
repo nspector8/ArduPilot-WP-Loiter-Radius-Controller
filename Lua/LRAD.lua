@@ -1,21 +1,25 @@
 --[[
- ArduPlane Lua Script
- Loiter Radius Controller + GCS Message Control
+ArduPlane Lua Script
+Loiter Radius Controller + GCS Message Control
 
- Target:
- ArduPlane 4.7.x
+Target:
+ArduPlane 4.7.x
 
- Features:
- - RC knob controls WP_LOITER_RAD
- - Adjustable minimum/maximum radius
- - Supports positive or negative loiter radii
- - Larger knob position always = larger loiter circle
- - Deadzone protection
- - Optional GCS message display
+Features:
+- RC knob controls WP_LOITER_RAD
+- Adjustable minimum/maximum radius
+- Supports positive or negative loiter radii
+- Larger knob position always = larger loiter circle
+- Deadzone protection
+- Optional GCS message display
 
- WPLR_GCS_MSG:
- 0 = GCS messages ON
- 1 = GCS messages OFF
+WPLR_GCS_MSG:
+0 = GCS messages ON
+1 = GCS messages OFF
+
+WPLR_UNITS:
+0 = Feet (default)
+1 = Meters
 --]]
 
 local SCRIPT_NAME = "WPLR"
@@ -27,7 +31,7 @@ local M_TO_FT = 3.28084
 
 local PARAM_TABLE_KEY = 76
 
-assert(param:add_table(PARAM_TABLE_KEY, "WPLR_", 4),
+assert(param:add_table(PARAM_TABLE_KEY, "WPLR_", 5),
        "Failed creating WPLR table")
 
 assert(param:add_param(PARAM_TABLE_KEY, 1, "MIN_RADIUS", -90),
@@ -42,10 +46,14 @@ assert(param:add_param(PARAM_TABLE_KEY, 3, "RADIUS_DZ", 2),
 assert(param:add_param(PARAM_TABLE_KEY, 4, "GCS_MSG", 0),
        "Failed creating GCS_MSG")
 
+assert(param:add_param(PARAM_TABLE_KEY, 5, "UNITS", 0),
+       "Failed creating UNITS")
+
 local min_radius = Parameter("WPLR_MIN_RADIUS")
 local max_radius = Parameter("WPLR_MAX_RADIUS")
 local radius_dz = Parameter("WPLR_RADIUS_DZ")
 local gcs_msg_enable = Parameter("WPLR_GCS_MSG")
+local wplr_units = Parameter("WPLR_UNITS")
 
 local rc_chan = nil
 local last_radius = param:get("WP_LOITER_RAD") or 60
@@ -85,7 +93,6 @@ end
 local function update_loiter_radius()
 
     if not rc_chan then
-
         rc_chan = rc:find_channel_for_option(RC_OPTION)
 
         if not rc_chan then
@@ -132,14 +139,21 @@ local function update_loiter_radius()
 
         last_radius = new_radius
 
-        local radius_feet =
-            math.floor(math.abs(new_radius) * M_TO_FT + 0.5)
+        local display_radius
 
-        if new_radius < 0 then
-            radius_feet = -radius_feet
+        if wplr_units:get() == 0 then
+            display_radius =
+                math.floor(math.abs(new_radius) * M_TO_FT + 0.5)
+        else
+            display_radius =
+                math.floor(math.abs(new_radius) + 0.5)
         end
 
-        gcs_msg(string.format("%d", radius_feet))
+        if new_radius < 0 then
+            display_radius = -display_radius
+        end
+
+        gcs_msg(string.format("%d", display_radius))
     end
 end
 
