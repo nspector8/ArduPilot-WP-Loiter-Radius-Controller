@@ -14,7 +14,7 @@ A standalone ArduPilot Lua script that provides:
 * Dynamic in-flight loiter radius adjustment
 * Direction-preserving radius control
 * Optional GCS radius notifications
-
+* Selectable display units
 The Lua script can be used with supported ArduPlane vehicles and does **not** require custom firmware.
 
 ### arduplane-WPLR-OSD.apj
@@ -23,7 +23,7 @@ An optional custom ArduPlane firmware build that adds:
 
 * OSD loiter radius display
 * Loiter direction indication
-* Selectable OSD display units
+* Selectable display units
 
 The included firmware is a **hardware-specific example build** created for the:
 
