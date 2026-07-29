@@ -23,7 +23,7 @@ Features:
 - Negative values create left-hand loiters
 - Increasing knob position always increases the physical loiter circle size
 - Deadzone protection reduces unnecessary parameter updates
-- GCS messages display the current radius in feet
+- GCS messages display the current radius in selected units
 - Optional GCS radius messages (can be disabled when using FPV goggles with OSD)
 
 GCS examples:
@@ -123,6 +123,7 @@ Configure:
     WPLR_MIN_RADIUS
     WPLR_MAX_RADIUS
     WPLR_RADIUS_DZ
+    WPLR_UNITS
 
 ### GCS Message Control
 

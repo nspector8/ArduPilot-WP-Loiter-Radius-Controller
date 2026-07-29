@@ -101,7 +101,7 @@ Set to 1 when using the WP_LOITER_RAD OSD display through FPV goggles to reduce 
 
 Example: WPLR_GCS_MSG = 1
 
-### OSD Loiter Radius Units
+OSD Loiter Radius Units
 
 The custom firmware OSD loiter radius display units are controlled by:
 
