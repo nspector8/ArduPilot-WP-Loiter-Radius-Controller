@@ -1,192 +1,288 @@
-WP_LOITER_RAD Controller Installation Guide
+# WP_LOITER_RAD Controller Installation Guide
 
-Overview
+## Overview
 
-This guide explains installation and configuration of the ArduPilot
-WP_LOITER_RAD Controller system.
+This guide explains installation and configuration of the ArduPilot WP_LOITER_RAD Controller system.
 
-The project consists of:
+The project consists of two components:
 
--   LRAD.lua
-    -   Lua script that allows RC transmitter knob control of
-        WP_LOITER_RAD
--   arduplane-WPLR-OSD.apj
-    -   Custom ArduPlane firmware containing an AP_OSD modification to
-        display loiter radius and direction
+### LRAD.lua
 
-Tested Hardware
+Standalone Lua script that provides:
 
-Aircraft: - AtomRC Swordfish
+* RC transmitter control of `WP_LOITER_RAD`
+* Dynamic in-flight loiter radius adjustment
+* Direction-preserving radius control
 
-Flight Controller: - TBS Lucid H7 Wing
+The Lua script can be used with standard ArduPilot firmware.
 
-Video / OSD System: - Walksnail Avatar Goggles X - Walksnail Avatar
-Moonlight VTX
+### arduplane-WPLR-OSD.apj
 
-OSD Connection: - DisplayPort OSD integration
+Optional custom ArduPlane firmware that adds:
 
-Requirements
+* OSD loiter radius display
+* Loiter direction indication
+* Selectable OSD display units
 
-Firmware: - ArduPlane 4.7.x - Lua scripting enabled - DisplayPort OSD
-support
+---
 
-Provided firmware: Firmware/arduplane-WPLR-OSD.apj
+# Requirements
 
-Firmware Installation
+Required:
 
-1.  Connect the flight controller to Mission Planner.
-2.  Install arduplane-WPLR-OSD.apj using Mission Planner firmware
-    upload.
-3.  Allow the flight controller to reboot.
-4.  Confirm the vehicle starts normally.
+* ArduPlane 4.7.x or compatible
+* Lua scripting enabled
 
-Lua Script Installation
+Optional OSD features:
 
-Lua script: Lua/LRAD.lua
+* Custom firmware
+* DisplayPort OSD support
 
-Copy the file to:
+---
 
+# Lua Script Installation
+
+Lua script:
+
+```text
+Lua/LRAD.lua
+```
+
+Copy to:
+
+```text
 /APM/scripts/
+```
 
 After installation:
 
-1.  Reboot the flight controller.
-2.  Confirm scripting is running.
-3.  Verify the GCS message:
+1. Reboot the flight controller.
+2. Confirm Lua scripting is running.
+3. Verify the GCS message:
 
+```text
 WPLR: Loaded
+```
 
-Parameter Configuration
+---
 
-Enable Lua scripting:
+# Parameter Configuration
 
+## Enable Lua
+
+```text
 SCR_ENABLE = 1
+```
 
-Assign a transmitter knob to:
+## Assign Transmitter Control
 
+Assign:
+
+```text
 RC Option 300
+```
+
+to the transmitter knob used for radius adjustment.
 
 The knob controls:
 
+```text
 WP_LOITER_RAD
+```
 
-WPLR Parameters
+---
 
-Minimum radius:
+# Lua Parameters
 
-WPLR_MIN_RADIUS
+| Parameter       | Description                      |
+| --------------- | -------------------------------- |
+| WPLR_MIN_RADIUS | Minimum allowed loiter radius    |
+| WPLR_MAX_RADIUS | Maximum allowed loiter radius    |
+| WPLR_RADIUS_DZ  | Radius update deadzone           |
+| WPLR_GCS_MSG    | Enable/disable GCS notifications |
+| WPLR_UNITS      | GCS message units                |
 
-Example: WPLR_MIN_RADIUS = -90
+Example:
 
-Maximum radius:
+```text
+WPLR_MIN_RADIUS = -90
+WPLR_MAX_RADIUS = -180
+WPLR_RADIUS_DZ = 2
+```
 
-WPLR_MAX_RADIUS
+---
 
-Example: WPLR_MAX_RADIUS = -180
+# GCS Message Control
 
-Radius deadzone:
+The parameter:
 
-WPLR_RADIUS_DZ
-
-Example: WPLR_RADIUS_DZ = 2
-
+```text
 WPLR_GCS_MSG
+```
 
-Controls WPLR GCS text notifications.
-
-0 = GCS messages ON (default)
-1 = GCS messages OFF
-
-Set to 1 when using the WP_LOITER_RAD OSD display through FPV goggles to reduce duplicate telemetry notifications.
-
-Example: WPLR_GCS_MSG = 1
-
-OSD Loiter Radius Units
-
-The custom firmware OSD loiter radius display units are controlled by:
-
-`LOITRAD_UNITS`
+controls radius notifications.
 
 Values:
 
-- `0` = Feet (default)
-- `1` = Meters
+```text
+0 = GCS messages ON (default)
+1 = GCS messages OFF
+```
 
-This parameter only affects the OSD loiter radius display. It is independent of the Lua script `WPLR_UNITS` parameter, which controls GCS text message units.
+When using the OSD display with FPV goggles, set:
 
-Loiter Direction
+```text
+WPLR_GCS_MSG = 1
+```
 
-ArduPilot uses the sign of WP_LOITER_RAD to determine loiter direction.
+to avoid duplicate notifications.
 
-Positive values: WP_LOITER_RAD = 180
+---
 
-Right-hand loiter.
+# Optional OSD Firmware Installation
 
-Negative values: WP_LOITER_RAD = -180
+For pilots who want FPV display confirmation, install:
 
-Left-hand loiter.
+```text
+Firmware/arduplane-WPLR-OSD.apj
+```
 
-The Lua script preserves this behavior while ensuring increasing
-transmitter knob position always increases the physical loiter circle
-size.
+using Mission Planner or another compatible ArduPilot flashing tool.
 
-OSD Display
+After flashing, configure the OSD element and units.
 
-The custom firmware adds a loiter radius display element.
+---
 
-The OSD display:
+# OSD Loiter Radius Units
 
--   Reads the active WP_LOITER_RAD value
--   Converts meters to feet
--   Preserves the positive or negative direction sign
+The firmware parameter:
+
+```text
+LOITRAD_UNITS
+```
+
+controls the OSD display units.
+
+Values:
+
+```text
+0 = Feet (default)
+1 = Meters
+```
+
+This parameter only affects the OSD display.
+
+It is independent from:
+
+```text
+WPLR_UNITS
+```
+
+which controls Lua GCS message units.
+
+---
+
+# Loiter Direction
+
+ArduPilot uses the sign of:
+
+```text
+WP_LOITER_RAD
+```
+
+to determine direction.
+
+Positive value:
+
+```text
+WP_LOITER_RAD = 180
+```
+
+Creates a right-hand loiter.
+
+Negative value:
+
+```text
+WP_LOITER_RAD = -180
+```
+
+Creates a left-hand loiter.
+
+The Lua script preserves this behavior while ensuring increasing knob position increases the physical loiter circle size.
+
+---
+
+# OSD Display
+
+The custom firmware displays:
+
+* Active `WP_LOITER_RAD`
+* Loiter direction sign
+* Selected display units
 
 Examples:
 
 Right-hand loiter:
 
+```text
 R:590
+```
 
 Left-hand loiter:
 
+```text
 R:-590
+```
 
-Testing Procedure
+---
+
+# Testing Procedure
 
 Before flight testing:
 
-1.  Confirm the Lua script loads.
-2.  Move the transmitter knob.
-3.  Verify the GCS message changes.
+1. Confirm Lua script loads.
+2. Move the transmitter knob.
+3. Verify GCS radius updates.
 
 Examples:
 
+```text
 WPLR: 300
+```
 
 or:
 
+```text
 WPLR: -300
+```
 
-4.  Confirm the OSD displays the matching radius.
+If using OSD firmware:
+
+Confirm the OSD matches the active radius.
 
 Examples:
 
+```text
 R:984
+```
 
 or:
 
+```text
 R:-984
+```
 
-5.  Perform initial testing in a safe area.
+Perform initial testing in a safe area.
 
-Notes
+---
 
-This project modifies ArduPilot behavior and should be tested carefully
-before operational flight.
+# Safety Notes
 
-Always verify:
+This project modifies normal ArduPilot loiter behavior.
 
--   Correct loiter direction
--   Correct radius scaling
--   Correct RC control operation
+Before operational flight, verify:
 
-before relying on the system in flight.
+* Correct loiter direction
+* Correct radius scaling
+* Correct RC control operation
+* Correct OSD display behavior
