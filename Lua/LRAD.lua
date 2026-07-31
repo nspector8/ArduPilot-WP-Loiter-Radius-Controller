@@ -90,11 +90,15 @@ local osd_enable = Parameter("WPLR_OSD_ENABLE")
 local osd_x = Parameter("WPLR_OSD_X")
 local osd_y = Parameter("WPLR_OSD_Y")
 
-
 local rc_chan = nil
 
 local last_radius = param:get("WP_LOITER_RAD") or 60
 local last_gcs_time = 0
+
+local osd_available = true
+local SCRIPT_VERSION = "1.2"
+
+local warned_minmax = false
 
 
 local function format_radius(radius)
@@ -154,7 +158,12 @@ local function update_osd(radius)
         return
     end
 
+    if not osd_available then
+        return
+    end
+
     if not osd then
+        osd_available = false
         return
     end
 
@@ -171,6 +180,13 @@ local function update_osd(radius)
     end)
 
     if not ok then
+        osd_available = false
+
+        gcs:send_text(
+            MAV_SEVERITY_INFO,
+            SCRIPT_NAME .. ": OSD backend unavailable"
+        )
+
         return
     end
 
@@ -249,13 +265,24 @@ local function update_loiter_radius()
 
     if min_abs > max_abs then
 
-        local temp = min_abs
+    if not warned_minmax then
 
-        min_abs = max_abs
+        gcs:send_text(
+            MAV_SEVERITY_INFO,
+            SCRIPT_NAME .. ": MIN/MAX swapped"
+        )
 
-        max_abs = temp
+        warned_minmax = true
 
     end
+
+    local temp = min_abs
+
+    min_abs = max_abs
+
+    max_abs = temp
+
+end
 
 
     local radius_abs =
@@ -287,9 +314,20 @@ local function update_loiter_radius()
 end
 
 
+local unit_name = "Feet"
+
+if wplr_units:get() == 1 then
+    unit_name = "Meters"
+end
+
 gcs:send_text(
     MAV_SEVERITY_INFO,
-    SCRIPT_NAME .. ": Loaded"
+    string.format(
+        "%s v%s: Loaded (%s)",
+        SCRIPT_NAME,
+        SCRIPT_VERSION,
+        unit_name
+    )
 )
 
 
