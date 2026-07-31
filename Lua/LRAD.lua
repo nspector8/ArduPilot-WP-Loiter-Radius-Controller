@@ -49,7 +49,7 @@ local GCS_MSG_INTERVAL_MS = 1000
 
 local M_TO_FT = 3.28084
 
-local PARAM_TABLE_KEY = 76
+local PARAM_TABLE_KEY = 90
 
 assert(param:add_table(PARAM_TABLE_KEY, "WPLR_", 8),
        "Failed creating WPLR table")
@@ -154,20 +154,40 @@ local function update_osd(radius)
         return
     end
 
-
     if not osd then
         return
     end
 
+    local ok = pcall(function()
 
-    osd:write(
-        osd_x:get(),
-        osd_y:get(),
-        string.format("R:%d   ", radius)
-    )
+        osd:write(
+            osd_x:get(),
+            osd_y:get(),
+            string.format("R:%d", radius)
+        )
+
+        osd:flush()
+
+    end)
+
+    if not ok then
+        return
+    end
+
+end
 
 
-    osd:flush()
+local function clamp(v, low, high)
+
+    if v < low then
+        return low
+    end
+
+    if v > high then
+        return high
+    end
+
+    return v
 
 end
 
