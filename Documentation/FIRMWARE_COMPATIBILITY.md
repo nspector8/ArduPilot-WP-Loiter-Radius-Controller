@@ -2,7 +2,7 @@
 
 ## Lua Script Compatibility
 
-`Lua/LRAD.lua` version **1.2** targets **ArduPlane 4.7.x+**.
+`Lua/LRAD_v1.2.lua` version **1.2** targets **ArduPlane 4.7.x+**.
 
 The Lua script is hardware independent and can be used on supported ArduPlane flight controllers with Lua scripting enabled and RC Option 300 assigned to a transmitter control.
 
@@ -63,7 +63,7 @@ The patch must be applied to a compatible ArduPilot source version. The included
 
 The following component is hardware independent:
 
-### LRAD.lua
+### LRAD_v1.2.lua
 
 The Lua script:
 
@@ -137,7 +137,7 @@ LRAD_UNITS
 
 | Component | Target | Custom Firmware Required |
 | --- | --- | --- |
-| `Lua/LRAD.lua` v1.2 | ArduPlane 4.7.x+ | No |
+| `Lua/LRAD_v1.2.lua` v1.2 | ArduPlane 4.7.x+ | No |
 | Included `arduplane-WPLR-OSD.apj` | TBS LUCID H7 WING | Yes |
 | `WP_LOITER_RAD` OSD patch | ArduPilot firmware build for target board | Yes |
 
