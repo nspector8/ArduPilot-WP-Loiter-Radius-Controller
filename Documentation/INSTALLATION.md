@@ -6,7 +6,7 @@ This guide explains installation and configuration of the ArduPilot WP_LOITER_RA
 
 The project consists of two independent components:
 
-### LRAD.lua
+### LRAD_v1.2.lua
 
 A standalone ArduPilot Lua script that provides:
 
@@ -83,7 +83,7 @@ is not intended as a universal ArduPilot firmware file.
 Lua script:
 
 ```text
-Lua/LRAD.lua
+Lua/LRAD_v1.2.lua
 ```
 
 Copy it to:
@@ -326,7 +326,7 @@ After flashing:
 
 1. Allow the flight controller to reboot.
 2. Confirm normal vehicle operation.
-3. Install and configure `Lua/LRAD.lua` if the Lua controller is also being used.
+3. Install and configure `Lua/LRAD_v1.2.lua` if the Lua controller is also being used.
 4. Configure the OSD loiter-radius element.
 
 ---
