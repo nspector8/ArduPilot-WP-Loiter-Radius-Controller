@@ -83,11 +83,12 @@ For hardware-specific firmware information, see `Documentation/FIRMWARE_COMPATIB
 
 If upgrading from v1.1:
 
-1. Replace the existing `LRAD.lua` with the v1.2 version.
-2. Reboot or reload the Lua scripting environment as appropriate.
-3. Review the `LRAD_*` parameters and set your preferred minimum, maximum, deadzone, GCS-message, and unit settings.
-4. Confirm the RC control is assigned to **Option 300**.
-5. If you use the custom OSD firmware, review its OSD unit setting separately; it is independent of `LRAD_UNITS`.
+1. Replace the existing Lua script with `LRAD_v1.2.lua`.
+2. Copy it to the ArduPilot scripts directory as `LRAD_v1.2.lua`.
+3. Reboot or reload the Lua scripting environment as appropriate.
+4. Review the `LRAD_*` parameters and set your preferred minimum, maximum, deadzone, GCS-message, and unit settings.
+5. Confirm the RC control is assigned to **Option 300**.
+6. If you use the custom OSD firmware, review its OSD unit setting separately; it is independent of `LRAD_UNITS`.
 
 The v1.2 release does **not** require a new OSD patch. The patch supplied with the repository remains applicable.
 
@@ -95,7 +96,7 @@ The v1.2 release does **not** require a new OSD patch. The patch supplied with t
 
 The v1.2 release is associated with:
 
-- `Lua/LRAD.lua` — Lua controller v1.2
+- `Lua/LRAD_v1.2.lua` — Lua controller v1.2
 - `Patches/WP_LOITER_RAD_OSD.patch` — custom OSD firmware patch
 - `Firmware/arduplane-WPLR-OSD.apj` — included custom ArduPlane firmware build
 
@@ -103,13 +104,13 @@ The included firmware image is carried forward from the previous release; the pr
 
 ## Known Considerations
 
-- `WP_LOITER_RAD` is stored by ArduPlane in meters. Unit conversion in the Lua script affects displayed GCS messages, not the parameter's stored value.
+- `WP_LOITER_RAD` is stored by ArduPilot in meters. Unit conversion in the Lua script affects displayed GCS messages, not the parameter's stored value.
 - For predictable direction selection, configure both `LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` with the same sign.
 - The OSD patch has its own unit configuration and should be treated independently from `LRAD_UNITS`.
 
 ## Files and Documentation
 
-- `Lua/LRAD.lua`
+- `Lua/LRAD_v1.2.lua`
 - `Documentation/INSTALLATION.md`
 - `Documentation/FIRMWARE_COMPATIBILITY.md`
 - `Documentation/BUILDING_CUSTOM_FIRMWARE.md`
