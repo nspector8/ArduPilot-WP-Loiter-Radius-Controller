@@ -86,7 +86,7 @@ The patch modifies the ArduPilot OSD to:
 - Display feet or meters
 - Add OSD enable and screen-position settings
 
-The OSD implementation is independent of `Lua/LRAD.lua`. The Lua script does not directly access the OSD.
+The OSD implementation is independent of `Lua/LRAD_v1.2.lua`. The Lua script does not directly access the OSD.
 
 ---
 
@@ -149,7 +149,7 @@ After flashing, verify normal aircraft operation before configuring the optional
 The Lua script:
 
 ```text
-Lua/LRAD.lua
+Lua/LRAD_v1.2.lua
 ```
 
 is hardware independent and targets ArduPlane 4.7.x+.
@@ -200,7 +200,7 @@ The included `.apj` file is only an example build for the TBS LUCID H7 WING.
 
 The Lua script and OSD modification are separate components:
 
-- Use `Lua/LRAD.lua` alone when dynamic radius control is required.
+- Use `Lua/LRAD_v1.2.lua` alone when dynamic radius control is required.
 - Apply `Patches/WP_LOITER_RAD_OSD.patch` and build custom firmware when the OSD display is required.
 
 When building against a different ArduPilot revision, inspect and test the patch carefully. Source-level changes in the AP_OSD implementation may prevent the patch from applying cleanly or may require equivalent manual changes.
