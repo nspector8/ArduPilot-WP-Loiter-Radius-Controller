@@ -12,7 +12,7 @@ The system uses an RC transmitter control to adjust the ArduPilot parameter `WP_
 
 ## Dynamic Loiter Radius Control
 
-The Lua script (`LRAD.lua`) provides dynamic control of the waypoint loiter radius.
+The Lua script (`LRAD_v1.2.lua`) provides dynamic control of the waypoint loiter radius.
 
 Features:
 
@@ -106,7 +106,7 @@ This prevents an external parameter change from being immediately overridden by 
 
 # Standalone Lua Operation
 
-The `LRAD.lua` script can be used independently with standard ArduPilot firmware.
+The `LRAD_v1.2.lua` script can be used independently with standard ArduPilot firmware.
 
 A custom firmware build is **not required** to use the dynamic waypoint loiter radius controller. The Lua script provides in-flight adjustment of `WP_LOITER_RAD` using an RC transmitter control on supported ArduPlane vehicles with Lua scripting enabled.
 
@@ -165,7 +165,7 @@ ArduPilot-WP-Loiter-Radius-Controller
 │   └── arduplane-WPLR-OSD.apj
 │
 ├── Lua
-│   └── LRAD.lua
+│   └── LRAD_v1.2.lua
 │
 ├── Patches
 │   └── WP_LOITER_RAD_OSD.patch
@@ -185,7 +185,7 @@ ArduPilot-WP-Loiter-Radius-Controller
 Copy:
 
 ```text
-Lua/LRAD.lua
+Lua/LRAD_v1.2.lua
 ```
 
 to the ArduPilot scripts directory:
