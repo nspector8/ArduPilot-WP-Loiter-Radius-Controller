@@ -33,8 +33,6 @@ Features:
 * Configurable GCS message units (meters or feet)
 * Startup message identifies the script version and selected units
 
-The Lua script preserves ArduPilot's standard loiter direction convention.
-
 ---
 
 # Usage
