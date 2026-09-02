@@ -14,7 +14,7 @@ was built for the TBS LUCID H7 WING flight controller.
 
 If you use a different ArduPilot-supported flight controller, create your own `.apj` file for that exact hardware target using the patch included in this project.
 
-The current Lua controller is version **1.2** and targets **ArduPlane 4.7.x+**.
+The current Lua controller is version **1.2** and targets **ArduPlane 4.7.x+**. The v1.2 Lua release also validates the MIN/MAX configuration by rejecting zero values and mismatched signs, and automatically swapping reversed absolute magnitudes.
 
 ---
 
@@ -154,7 +154,7 @@ Lua/LRAD_v1.2.lua
 
 is hardware independent and targets ArduPlane 4.7.x+.
 
-Copy it to:
+Copy the revised v1.2 release asset to:
 
 ```text
 /APM/scripts/
@@ -169,6 +169,13 @@ Documentation/INSTALLATION.md
 ```
 
 The Lua script can be used with standard ArduPlane firmware; the custom OSD build is not required for radius control.
+
+The v1.2 script validates the radius configuration before calculating the knob-selected value:
+
+- `LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` cannot be zero.
+- The two values must have matching signs.
+- Reversed absolute magnitudes are automatically swapped.
+- Each zero/sign/swap warning is issued once per script run.
 
 ---
 
