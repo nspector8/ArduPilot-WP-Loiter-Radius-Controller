@@ -76,6 +76,8 @@ local takeover_radius = nil
 
 local last_gcs_time = 0
 
+local warned_zero = false
+local warned_sign = false
 local warned_minmax = false
 
 local function format_radius(radius)
@@ -113,7 +115,7 @@ local function gcs_msg(text)
 
         gcs:send_text(
             MAV_SEVERITY_INFO,
-            "R: " .. text
+            "R:" .. text
         )
 
         last_gcs_time = now
@@ -140,7 +142,40 @@ local function calculate_knob_radius()
     local max_r = max_radius:get()
 
     if min_r == nil or max_r == nil then
-        return nil
+        return nil, false
+    end
+
+    if min_r == 0 or max_r == 0 then
+
+        if not warned_zero then
+
+            gcs:send_text(
+                MAV_SEVERITY_INFO,
+                SCRIPT_NAME .. ": MIN/MAX cannot be zero"
+            )
+
+            warned_zero = true
+
+        end
+
+        return nil, true
+    end
+
+    if (min_r < 0 and max_r > 0)
+    or (min_r > 0 and max_r < 0) then
+
+        if not warned_sign then
+
+            gcs:send_text(
+                MAV_SEVERITY_INFO,
+                SCRIPT_NAME .. ": MIN/MAX signs must match"
+            )
+
+            warned_sign = true
+
+        end
+
+        return nil, true
     end
 
     local knob = clamp(
@@ -219,14 +254,18 @@ local function update_loiter_radius()
         dz = 1
     end
 
-    local knob_radius = calculate_knob_radius()
+    local knob_radius, invalid_config = calculate_knob_radius()
 
     if knob_radius == nil then
 
-        gcs:send_text(
-            MAV_SEVERITY_INFO,
-            SCRIPT_NAME .. ": parameter read failure"
-        )
+        if not invalid_config then
+
+            gcs:send_text(
+                MAV_SEVERITY_INFO,
+                SCRIPT_NAME .. ": parameter read failure"
+            )
+
+        end
 
         return
 
