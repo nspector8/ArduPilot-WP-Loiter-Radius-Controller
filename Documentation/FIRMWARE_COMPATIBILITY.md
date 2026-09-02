@@ -14,9 +14,15 @@ The script uses the standard ArduPilot `WP_LOITER_RAD` parameter and:
 - Creates the `LRAD_` parameter table
 - Supports positive and negative loiter radius values
 - Maps increasing knob position to increasing physical loiter-circle size
+- Rejects zero MIN/MAX values
+- Rejects MIN/MAX values with mismatched signs
+- Automatically swaps reversed absolute MIN/MAX magnitudes
+- Issues zero/sign/swap configuration warnings once per script run
 - Detects external `WP_LOITER_RAD` changes
 - Waits for knob movement before taking control back after an external change
 - Supports configurable GCS message units
+
+The current v1.2 release asset `LRAD_v1.2.lua` contains these validation changes. The original release asset was replaced with the revised script; the filename and script version remain `LRAD_v1.2.lua` / v1.2.
 
 ---
 
@@ -73,6 +79,7 @@ The Lua script:
 - Supports positive and negative loiter radius values
 - Preserves ArduPilot loiter direction behavior
 - Uses the transmitter knob to select the radius range
+- Validates the MIN/MAX configuration
 - Detects external `WP_LOITER_RAD` changes
 - Allows knob movement to take control back after an external change
 - Provides optional GCS radius messages
