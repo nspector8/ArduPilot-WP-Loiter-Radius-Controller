@@ -443,19 +443,15 @@ Perform the following checks before flight:
 1. Confirm the Lua script loads and reports `LRAD v1.2`.
 2. Verify the selected startup units in the load message.
 3. Confirm RC Option 300 is assigned to the intended knob.
-4. Test a valid MIN/MAX configuration with both values positive or both negative.
-5. Test a zero MIN/MAX value and confirm `LRAD: MIN/MAX cannot be zero` is reported.
-6. Test mismatched MIN/MAX signs and confirm `LRAD: MIN/MAX signs must match` is reported.
-7. Test reversed absolute MIN/MAX magnitudes and confirm `LRAD: MIN/MAX swapped` is reported.
-8. Correct the configuration and verify normal radius control resumes.
-9. Move the knob through its range and verify the physical radius increases as the knob is increased.
-10. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
-11. Verify the configured minimum and maximum radius are respected.
-12. Verify the deadzone prevents unnecessary updates.
-13. Change `WP_LOITER_RAD` externally and confirm the Lua controller accepts the change without immediately overwriting it.
-14. Move the knob and confirm Lua control resumes.
-15. If GCS messages are enabled, verify messages use the selected units and `R:` format.
-16. If using the custom OSD firmware, verify the OSD matches the active `WP_LOITER_RAD` value and selected OSD units.
+4. Configure valid MIN/MAX values with both values positive or both negative.
+5. Move the knob through its range and verify the physical radius increases as the knob is increased.
+6. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
+7. Verify the configured minimum and maximum radius are respected.
+8. Verify the deadzone prevents unnecessary updates.
+9. Change `WP_LOITER_RAD` externally and confirm the Lua controller accepts the change without immediately overwriting it.
+10. Move the knob and confirm Lua control resumes.
+11. If GCS messages are enabled, verify messages use the selected units and `R:` format.
+12. If using the custom OSD firmware, verify the OSD matches the active `WP_LOITER_RAD` value and selected OSD units.
 
 Example GCS messages:
 
@@ -494,7 +490,7 @@ Before operational flight, verify:
 * Correct loiter direction
 * Correct radius scaling
 * Correct startup knob behavior
-* Correct MIN/MAX validation behavior
+* Correct MIN/MAX configuration
 * Correct external-parameter takeover behavior
 * Correct RC control operation
 * Correct GCS message behavior
