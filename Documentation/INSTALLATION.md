@@ -2,52 +2,9 @@
 
 ## Overview
 
-This guide explains installation and configuration of the ArduPilot WP_LOITER_RAD Controller system.
+This guide covers installation of the ArduPilot WP_LOITER_RAD Controller Lua script and the optional custom AP_OSD firmware modification.
 
-The project consists of two independent components:
-
-### LRAD_v1.2.lua
-
-A standalone ArduPilot Lua script that provides:
-
-* RC transmitter control of `WP_LOITER_RAD` using RC Option 300
-* Initial knob position sets the starting loiter radius
-* Adjustable minimum and maximum radius
-* Positive or negative loiter-radius support
-* Intuitive scaling where increasing knob position always increases the physical loiter circle size
-* Deadzone protection
-* Validation of the MIN/MAX radius configuration
-* Detection and acceptance of external `WP_LOITER_RAD` changes
-* Knob-movement takeover after an external change
-* Optional GCS radius notifications
-* Selectable GCS display units
-
-The current Lua version is **v1.2** and targets **ArduPlane 4.7.x+**.
-
-The Lua script can be used with supported ArduPlane vehicles and does **not** require custom firmware.
-
-### Optional AP_OSD firmware modification
-
-The optional custom ArduPlane firmware modification adds:
-
-* OSD loiter radius display
-* Loiter direction indication through the sign
-* Selectable OSD display units
-* Configurable OSD position and enable settings
-
-The Lua script does not directly access or control the OSD. The OSD functionality is provided by the firmware modification.
-
-The included firmware is a **hardware-specific example build** created for the:
-
-* TBS LUCID H7 WING flight controller
-
-It should only be installed on compatible hardware.
-
-Users with other ArduPilot-supported flight controllers should build their own firmware using:
-
-```text
-Patches/WP_LOITER_RAD_OSD.patch
-```
+The Lua script can be installed and used with standard ArduPilot firmware. The optional OSD functionality requires the custom firmware modification.
 
 ---
 
@@ -87,7 +44,7 @@ Lua script:
 Lua/LRAD_v1.2.lua
 ```
 
-Copy the revised `LRAD_v1.2.lua` from the current release assets to:
+Copy `LRAD_v1.2.lua` from the current release assets to:
 
 ```text
 /APM/scripts/
@@ -125,21 +82,15 @@ Assign:
 RC Option 300
 ```
 
-to the transmitter knob used for radius adjustment.
-
-The knob controls:
-
-```text
-WP_LOITER_RAD
-```
-
-The full knob range is mapped between the configured minimum and maximum **absolute** radius values. A higher knob position always produces a larger physical loiter circle.
+to the transmitter control intended for loiter-radius adjustment.
 
 ---
 
-# LRAD Parameters
+# LRAD Parameter Configuration
 
-The script creates the following parameters in the `LRAD_` parameter table:
+After the script has been installed and loaded, configure the `LRAD_*` parameters as required for the aircraft.
+
+The parameters created by the script are:
 
 | Parameter | Default | Description |
 | --- | ---: | --- |
@@ -149,159 +100,13 @@ The script creates the following parameters in the `LRAD_` parameter table:
 | `LRAD_GCS_MSG` | `1` | GCS radius message control: `0` off, `1` on |
 | `LRAD_UNITS` | `1` | GCS message units: `0` meters, `1` feet |
 
-### MIN/MAX configuration rules
-
-`LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` must satisfy all of the following:
-
-1. Neither value may be `0`.
-2. Both values must have the same sign.
-3. If their absolute magnitudes are reversed, the script automatically swaps the absolute range and reports the condition.
-
-Invalid zero or mixed-sign configurations are rejected. The controller does not change `WP_LOITER_RAD` while such an invalid configuration remains active.
-
-### Example configuration
-
-For a left-hand loiter range from 90 to 180 meters:
-
-```text
-LRAD_MIN_RADIUS = -90
-LRAD_MAX_RADIUS = -180
-LRAD_RADIUS_DZ = 2
-LRAD_GCS_MSG = 1
-LRAD_UNITS = 1
-```
-
-Because the script works from the absolute radius values, the higher knob position corresponds to `-180`, while the lower knob position corresponds to `-90`. The resulting circle therefore becomes larger as the knob is increased.
-
-If the absolute values are reversed, the script automatically swaps them and sends:
-
-```text
-LRAD: MIN/MAX swapped
-```
-
-For an invalid configuration with a zero value, the script reports:
-
-```text
-LRAD: MIN/MAX cannot be zero
-```
-
-For an invalid configuration with mismatched signs, the script reports:
-
-```text
-LRAD: MIN/MAX signs must match
-```
-
----
-
-# Initial Knob Position
-
-When the script first obtains the RC channel, it uses the current knob position to calculate the starting radius and writes that value to `WP_LOITER_RAD`.
-
-This means the knob position at startup is authoritative for the initial Lua-controlled radius.
-
-After startup, the script monitors `WP_LOITER_RAD` for changes made outside the Lua controller.
-
----
-
-# External WP_LOITER_RAD Changes
-
-The v1.2 script detects an external change to `WP_LOITER_RAD`.
-
-For example, if a ground station changes `WP_LOITER_RAD` while the transmitter knob remains stationary:
-
-1. The script detects that the parameter changed from the last Lua-controlled value.
-2. The external value is accepted and tracked.
-3. The script does not immediately overwrite the external value with the knob's current value.
-4. The current knob-selected radius becomes the takeover reference.
-5. The pilot moves the knob.
-6. The first knob movement after the external change returns control to Lua and sets `WP_LOITER_RAD` to the new knob-selected radius.
-
-This behavior prevents a stationary knob from immediately undoing an intentional external parameter change.
-
----
-
-# Deadzone
-
-`LRAD_RADIUS_DZ` prevents frequent small changes to `WP_LOITER_RAD`.
-
-The script only updates the parameter when the calculated knob radius differs from the last Lua-controlled radius by at least the configured deadzone.
-
-Values below `1` are treated as `1`.
-
----
-
-# GCS Message Control
-
-The parameter:
-
-```text
-LRAD_GCS_MSG
-```
-
-controls radius notifications sent through GCS messages.
-
-Values:
-
-```text
-0 = GCS messages OFF
-1 = GCS messages ON (default)
-```
-
-Radius updates are sent in the form:
-
-```text
-R:300
-```
-
-or:
-
-```text
-R:-300
-```
-
-Messages are rate-limited to approximately one per second.
-
-If using the custom OSD firmware and you do not want duplicate radius information in the GCS, set:
-
-```text
-LRAD_GCS_MSG = 0
-```
-
-The OSD display is independent of this parameter and will continue to operate normally.
-
----
-
-# Lua Display Units
-
-The parameter:
-
-```text
-LRAD_UNITS
-```
-
-controls the units used for Lua GCS radius messages.
-
-Values:
-
-```text
-0 = Meters
-1 = Feet (default)
-```
-
-The displayed sign is preserved:
-
-```text
-R:984
-R:-984
-```
-
-The unit selection only affects the Lua GCS message. It does not change the underlying `WP_LOITER_RAD` parameter, which remains in ArduPilot's native units.
+For usage details and parameter behavior, see the main `README.md`.
 
 ---
 
 # Optional OSD Firmware Installation
 
-The OSD loiter radius display requires the custom firmware modification.
+The OSD loiter-radius display requires the custom firmware modification.
 
 ## Important Hardware Notice
 
@@ -319,25 +124,19 @@ TBS LUCID H7 WING
 
 **Do not install this firmware on other flight controllers.**
 
-For other ArduPilot-supported boards:
-
-1. Build compatible ArduPlane firmware for the target board.
-2. Apply the AP_OSD modification patch:
+For other ArduPilot-supported boards, build compatible firmware for the target board and apply:
 
 ```text
 Patches/WP_LOITER_RAD_OSD.patch
 ```
 
-3. Build the firmware.
-4. Flash the resulting firmware.
+See `Documentation/BUILDING_CUSTOM_FIRMWARE.md` for the complete custom firmware build procedure.
 
 ---
 
 ## Installing the Provided Firmware
 
-For compatible TBS LUCID H7 WING controllers:
-
-Flash:
+For compatible TBS LUCID H7 WING controllers, flash:
 
 ```text
 Firmware/arduplane-WPLR-OSD.apj
@@ -348,114 +147,28 @@ using Mission Planner or another compatible ArduPilot flashing tool.
 After flashing:
 
 1. Allow the flight controller to reboot.
-2. Confirm normal vehicle operation.
-3. Install and configure `Lua/LRAD_v1.2.lua` if the Lua controller is also being used.
-4. Configure the OSD loiter-radius element.
+2. Confirm that the flight controller starts normally.
+3. Install `Lua/LRAD_v1.2.lua` if the Lua controller is also being used.
+4. Configure the OSD settings as required.
 
 ---
 
-# OSD Loiter Radius Settings
+# Installation Notes
 
-The firmware patch adds the following OSD settings:
+The Lua script and OSD firmware modification are independent components.
 
-```text
-LOITRAD_EN
-LOITRAD_X
-LOITRAD_Y
-LOITRAD_UNITS
-```
+The Lua script does not require the custom firmware modification.
 
-`LOITRAD_UNITS` controls the OSD display units:
+The included `.apj` firmware is board-specific and must only be flashed to the supported TBS LUCID H7 WING target.
 
-```text
-0 = Feet (default)
-1 = Meters
-```
-
-This setting is independent from:
-
-```text
-LRAD_UNITS
-```
-
-which controls Lua GCS message units.
-
-The OSD display reads the active `WP_LOITER_RAD` value directly. It is therefore independent of whether the value was most recently changed by the Lua script, a ground station, or another ArduPilot function.
+Users with other ArduPilot-supported flight controllers must build firmware for the exact target board rather than using the included `.apj` file.
 
 ---
 
-# Loiter Direction
+# Safety and Disclaimer
 
-ArduPilot uses the sign of:
-
-```text
-WP_LOITER_RAD
-```
-
-to determine loiter direction.
-
-Positive value:
-
-```text
-WP_LOITER_RAD = 180
-```
-
-Creates a right-hand loiter.
-
-Negative value:
-
-```text
-WP_LOITER_RAD = -180
-```
-
-Creates a left-hand loiter.
-
-The Lua controller preserves this behavior while mapping increasing transmitter knob position to increasing physical circle size.
-
----
-
-# OSD Display
-
-The custom firmware displays the active `WP_LOITER_RAD` value with its sign.
-
-Examples:
-
-Right-hand loiter:
-
-```text
-R:590
-```
-
-Left-hand loiter:
-
-```text
-R:-590
-```
-
-The value can be displayed in feet or meters according to `LOITRAD_UNITS`.
-
----
-
-# Safety Notes
-
-This project modifies normal ArduPilot loiter behavior.
-
-Before operational flight, verify:
-
-* Correct loiter direction
-* Correct radius scaling
-* Correct startup knob behavior
-* Correct MIN/MAX configuration
-* Correct external-parameter takeover behavior
-* Correct RC control operation
-* Correct GCS message behavior
-* Correct OSD display behavior, if using custom firmware
-* Correct firmware target for the flight controller
-
-Always perform initial testing in a controlled environment and confirm the aircraft behaves as expected before relying on the controller in flight.
-
----
-
-# Disclaimer
+This project modifies normal ArduPilot loiter behavior and may affect aircraft operation.
 
 Use of the provided Lua scripts, firmware files, patches, and documentation is entirely at the user's own risk. The user assumes all responsibility for installation, configuration, testing, operation, and any resulting damage, loss, or injury. No guarantee is made that the provided files are suitable for any particular aircraft, flight controller, or operating environment.
+
+Always follow the appropriate ArduPilot and flight-controller safety procedures when installing firmware or operating the aircraft.
