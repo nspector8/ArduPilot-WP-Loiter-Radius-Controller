@@ -8,16 +8,6 @@ The Lua script is hardware independent and can be used on supported ArduPlane fl
 
 The Lua controller does not require the custom OSD firmware modification.
 
-The script uses the standard ArduPilot `WP_LOITER_RAD` parameter and:
-
-- Uses RC Option 300
-- Creates the `LRAD_` parameter table
-- Supports positive and negative loiter radius values
-- Maps increasing knob position to increasing physical loiter-circle size
-- Detects external `WP_LOITER_RAD` changes
-- Waits for knob movement before taking control back after an external change
-- Supports configurable GCS message units
-
 ---
 
 ## Included Firmware
@@ -64,18 +54,6 @@ The patch must be applied to a compatible ArduPilot source version. The included
 The following component is hardware independent:
 
 ### LRAD_v1.2.lua
-
-The Lua script:
-
-- Controls `WP_LOITER_RAD`
-- Uses RC Option 300
-- Creates `LRAD_` parameters
-- Supports positive and negative loiter radius values
-- Preserves ArduPilot loiter direction behavior
-- Uses the transmitter knob to select the radius range
-- Detects external `WP_LOITER_RAD` changes
-- Allows knob movement to take control back after an external change
-- Provides optional GCS radius messages
 
 The Lua script can be used on any supported ArduPlane vehicle with Lua scripting enabled, subject to the normal resource and scripting capabilities of the target flight controller.
 
