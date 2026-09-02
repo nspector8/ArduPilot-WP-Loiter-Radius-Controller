@@ -2,7 +2,7 @@
 
 ## Lua Script Compatibility
 
-`Lua/LRAD_v1.2.lua` version **1.2** targets **ArduPlane 4.7.x+**.
+`Lua/LRAD_v1.2.lua` targets **ArduPlane 4.7.x+**.
 
 The Lua script is hardware independent and can be used on supported ArduPlane flight controllers with Lua scripting enabled and RC Option 300 assigned to a transmitter control.
 
@@ -14,14 +14,9 @@ The script uses the standard ArduPilot `WP_LOITER_RAD` parameter and:
 - Creates the `LRAD_` parameter table
 - Supports positive and negative loiter radius values
 - Maps increasing knob position to increasing physical loiter-circle size
-- Rejects zero MIN/MAX values
-- Rejects MIN/MAX values with mismatched signs
-- Automatically swaps reversed absolute MIN/MAX magnitudes
 - Detects external `WP_LOITER_RAD` changes
 - Waits for knob movement before taking control back after an external change
 - Supports configurable GCS message units
-
-The current v1.2 release asset `LRAD_v1.2.lua` contains these validation changes. The original release asset was replaced with the revised script; the filename and script version remain `LRAD_v1.2.lua` / v1.2.
 
 ---
 
@@ -78,7 +73,6 @@ The Lua script:
 - Supports positive and negative loiter radius values
 - Preserves ArduPilot loiter direction behavior
 - Uses the transmitter knob to select the radius range
-- Validates the MIN/MAX configuration
 - Detects external `WP_LOITER_RAD` changes
 - Allows knob movement to take control back after an external change
 - Provides optional GCS radius messages
@@ -143,7 +137,7 @@ LRAD_UNITS
 
 | Component | Target | Custom Firmware Required |
 | --- | --- | --- |
-| `Lua/LRAD_v1.2.lua` v1.2 | ArduPlane 4.7.x+ | No |
+| `Lua/LRAD_v1.2.lua` | ArduPlane 4.7.x+ | No |
 | Included `arduplane-WPLR-OSD.apj` | TBS LUCID H7 WING | Yes |
 | `WP_LOITER_RAD` OSD patch | ArduPilot firmware build for target board | Yes |
 
