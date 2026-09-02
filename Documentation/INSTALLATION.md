@@ -436,51 +436,6 @@ The value can be displayed in feet or meters according to `LOITRAD_UNITS`.
 
 ---
 
-# Testing Procedure
-
-Perform the following checks before flight:
-
-1. Confirm the Lua script loads and reports `LRAD v1.2`.
-2. Verify the selected startup units in the load message.
-3. Confirm RC Option 300 is assigned to the intended knob.
-4. Configure valid MIN/MAX values with both values positive or both negative.
-5. Move the knob through its range and verify the physical radius increases as the knob is increased.
-6. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
-7. Verify the configured minimum and maximum radius are respected.
-8. Verify the deadzone prevents unnecessary updates.
-9. Change `WP_LOITER_RAD` externally and confirm the Lua controller accepts the change without immediately overwriting it.
-10. Move the knob and confirm Lua control resumes.
-11. If GCS messages are enabled, verify messages use the selected units and `R:` format.
-12. If using the custom OSD firmware, verify the OSD matches the active `WP_LOITER_RAD` value and selected OSD units.
-
-Example GCS messages:
-
-```text
-R:300
-```
-
-or:
-
-```text
-R:-300
-```
-
-Example OSD displays:
-
-```text
-R:984
-```
-
-or:
-
-```text
-R:-984
-```
-
-Perform initial testing in a safe, controlled area before operational flight.
-
----
-
 # Safety Notes
 
 This project modifies normal ArduPilot loiter behavior.
@@ -498,3 +453,9 @@ Before operational flight, verify:
 * Correct firmware target for the flight controller
 
 Always perform initial testing in a controlled environment and confirm the aircraft behaves as expected before relying on the controller in flight.
+
+---
+
+# Disclaimer
+
+Use of the provided Lua scripts, firmware files, patches, and documentation is entirely at the user's own risk. The user assumes all responsibility for installation, configuration, testing, operation, and any resulting damage, loss, or injury. No guarantee is made that the provided files are suitable for any particular aircraft, flight controller, or operating environment.
