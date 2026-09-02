@@ -342,3 +342,13 @@ This project is intended for FPV and autonomous aircraft applications where the 
 * Reduced dependence on ground-station parameter changes
 
 This project is provided as a community resource for ArduPilot users interested in dynamic waypoint loiter radius control.
+
+---
+
+# Safety and Disclaimer
+
+This project modifies normal ArduPilot loiter behavior and may affect aircraft operation.
+
+Use of the provided Lua scripts, firmware files, patches, and documentation is entirely at the user's own risk. The user assumes all responsibility for installation, configuration, testing, operation, and any resulting damage, loss, or injury. No guarantee is made that the provided files are suitable for any particular aircraft, flight controller, or operating environment.
+
+Always follow the appropriate ArduPilot and flight-controller safety procedures when installing firmware or operating the aircraft.
