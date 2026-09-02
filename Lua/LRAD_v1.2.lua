@@ -14,7 +14,7 @@ Features:
 - Deadzone protection
 - Warning if MIN/MAX radius signs do not match or either value is zero
 - External WP_LOITER_RAD changes are detected and accepted
-- Knob movement takes control back after an external change
+- Knob movement takes control back after external change
 - Optional GCS message display
 
 LRAD_GCS_MSG:
@@ -23,7 +23,7 @@ LRAD_GCS_MSG:
 
 LRAD_UNITS:
 0 = Meters
-1 = Feet (default)
+1 = Feet
 
 OSD:
 OSD functionality is handled by the ArduPilot firmware patch.
