@@ -17,7 +17,6 @@ The script uses the standard ArduPilot `WP_LOITER_RAD` parameter and:
 - Rejects zero MIN/MAX values
 - Rejects MIN/MAX values with mismatched signs
 - Automatically swaps reversed absolute MIN/MAX magnitudes
-- Issues zero/sign/swap configuration warnings once per script run
 - Detects external `WP_LOITER_RAD` changes
 - Waits for knob movement before taking control back after an external change
 - Supports configurable GCS message units
