@@ -35,7 +35,88 @@ Features:
 
 The Lua script preserves ArduPilot's standard loiter direction convention.
 
-### GCS Message Control
+---
+
+# Usage
+
+## RC Loiter Radius Control
+
+Assign **RC Option 300** to a transmitter knob. The knob position is mapped across the configured absolute radius range.
+
+A larger knob position always corresponds to a larger physical loiter circle, regardless of whether the configured radii are positive or negative.
+
+For example:
+
+```text
+LRAD_MIN_RADIUS = -90
+LRAD_MAX_RADIUS = -180
+```
+
+The controller treats the absolute values as a range from 90 to 180 meters and applies the negative sign to preserve left-hand loiter direction. The lower knob position produces the smaller circle and the higher knob position produces the larger circle.
+
+The knob position at startup is authoritative for the initial Lua-controlled radius.
+
+## LRAD Parameters
+
+The script creates the following parameters in the `LRAD_` parameter table:
+
+| Parameter | Default | Description |
+| --- | ---: | --- |
+| `LRAD_MIN_RADIUS` | `-90` | Minimum signed radius used by the knob range |
+| `LRAD_MAX_RADIUS` | `-180` | Maximum signed radius used by the knob range |
+| `LRAD_RADIUS_DZ` | `2` | Minimum radius change required before the script updates `WP_LOITER_RAD` |
+| `LRAD_GCS_MSG` | `1` | GCS radius message control: `0` off, `1` on |
+| `LRAD_UNITS` | `1` | GCS message units: `0` meters, `1` feet |
+
+### MIN/MAX Configuration Rules
+
+`LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` must satisfy all of the following:
+
+* Neither value may be `0`.
+* Both values must have the same sign.
+* If their absolute magnitudes are reversed, the script automatically swaps the absolute range.
+
+Invalid zero or mixed-sign configurations are rejected and the current `WP_LOITER_RAD` value is not changed by the controller until the configuration is corrected.
+
+If the absolute values are reversed, the script reports:
+
+```text
+LRAD: MIN/MAX swapped
+```
+
+For an invalid zero configuration, the script reports:
+
+```text
+LRAD: MIN/MAX cannot be zero
+```
+
+For an invalid mixed-sign configuration, the script reports:
+
+```text
+LRAD: MIN/MAX signs must match
+```
+
+## Deadzone
+
+`LRAD_RADIUS_DZ` prevents frequent small changes to `WP_LOITER_RAD`.
+
+The script only updates the parameter when the calculated knob radius differs from the last Lua-controlled radius by at least the configured deadzone. Values below `1` are treated as `1`.
+
+## External WP_LOITER_RAD Changes
+
+The controller detects changes to `WP_LOITER_RAD` that occur outside the Lua controller, such as a ground-station parameter change.
+
+When an external change is detected:
+
+1. The external value is accepted and tracked.
+2. The Lua controller does not immediately overwrite it with the current knob position.
+3. The current knob position is remembered as the takeover point.
+4. The pilot must move the knob before the Lua controller takes control again.
+5. Once the knob moves, `WP_LOITER_RAD` is updated to the new knob-selected value.
+
+This prevents an external parameter change from being immediately overridden by a stationary transmitter knob.
+
+## GCS Message Control
 
 `LRAD_GCS_MSG` controls radius notifications:
 
@@ -53,7 +134,7 @@ R:-300
 
 The script limits radius messages to approximately one per second.
 
-### Lua Units
+## Lua Display Units
 
 `LRAD_UNITS` controls the units used in Lua GCS radius messages:
 
@@ -62,66 +143,9 @@ The script limits radius messages to approximately one per second.
 1 = Feet (default)
 ```
 
-The sign is preserved in the displayed value so that the loiter direction remains visible.
+The sign is preserved in the displayed value so that loiter direction remains visible.
 
----
-
-# Loiter Radius Control Behavior
-
-The controller maps the transmitter knob position across the configured absolute radius range.
-
-The important behavior is that **a larger knob position always corresponds to a larger physical loiter circle**, regardless of whether the configured radii are positive or negative.
-
-For example, with:
-
-```text
-LRAD_MIN_RADIUS = -90
-LRAD_MAX_RADIUS = -180
-```
-
-the controller treats the absolute values as a range from 90 to 180 meters and applies the negative sign to preserve left-hand loiter direction. The lower knob position produces the smaller circle and the higher knob position produces the larger circle.
-
-The MIN/MAX configuration has three validation rules:
-
-* Neither `LRAD_MIN_RADIUS` nor `LRAD_MAX_RADIUS` may be zero.
-* The two values must have matching signs.
-* If their absolute magnitudes are reversed, the script automatically swaps the range.
-
-Invalid zero or mixed-sign configurations are rejected and the current `WP_LOITER_RAD` value is not changed by the controller until the configuration is corrected.
-
-If the absolute values of the configured minimum and maximum are reversed, the script automatically swaps them and reports:
-
-```text
-LRAD: MIN/MAX swapped
-```
-
-The script also protects against invalid parameter reads and enforces a minimum effective deadzone of 1.
-
----
-
-# External WP_LOITER_RAD Changes
-
-The v1.2 controller detects changes to `WP_LOITER_RAD` that occur outside the Lua controller, such as a ground-station parameter change.
-
-When an external change is detected:
-
-1. The external value is accepted and tracked.
-2. The Lua controller does not immediately overwrite it with the current knob position.
-3. The current knob position is remembered as the takeover point.
-4. The pilot must move the knob before the Lua controller takes control again.
-5. Once the knob moves, `WP_LOITER_RAD` is updated to the new knob-selected value.
-
-This prevents an external parameter change from being immediately overridden by a stationary transmitter knob.
-
----
-
-# Standalone Lua Operation
-
-The `LRAD_v1.2.lua` script can be used independently with standard ArduPilot firmware.
-
-A custom firmware build is **not required** to use the dynamic waypoint loiter radius controller. The Lua script provides in-flight adjustment of `WP_LOITER_RAD` using an RC transmitter control on supported ArduPlane vehicles with Lua scripting enabled.
-
-The OSD functionality is separate from the Lua script. The Lua script does **not** directly access or control the OSD. The optional AP_OSD firmware modification reads the active `WP_LOITER_RAD` parameter and provides the OSD display.
+The unit selection only affects Lua GCS messages. `WP_LOITER_RAD` remains in ArduPilot's native units.
 
 ---
 
@@ -159,11 +183,23 @@ The OSD units are controlled independently by the firmware parameter `LOITRAD_UN
 1 = Meters
 ```
 
+The OSD display reads the active `WP_LOITER_RAD` value directly, regardless of whether the value was most recently changed by Lua, a ground station, or another ArduPilot function.
+
 Firmware build:
 
 * Based on ArduPlane 4.7.x
 * Custom AP_OSD modification for loiter radius display
 * Compatible with supported DisplayPort OSD systems
+
+---
+
+# Standalone Lua Operation
+
+The `LRAD_v1.2.lua` script can be used independently with standard ArduPilot firmware.
+
+A custom firmware build is **not required** to use the dynamic waypoint loiter radius controller. The Lua script provides in-flight adjustment of `WP_LOITER_RAD` using an RC transmitter control on supported ArduPlane vehicles with Lua scripting enabled.
+
+The OSD functionality is separate from the Lua script. The Lua script does **not** directly access or control the OSD. The optional AP_OSD firmware modification reads the active `WP_LOITER_RAD` parameter and provides the OSD display.
 
 ---
 
@@ -193,29 +229,13 @@ ArduPilot-WP-Loiter-Radius-Controller
 
 ## Lua Script
 
-Copy the revised `LRAD_v1.2.lua` release asset to the ArduPilot scripts directory:
+Install `LRAD_v1.2.lua` in the ArduPilot scripts directory:
 
 ```text
 /APM/scripts/
 ```
 
-Enable Lua scripting and configure the LRAD parameters:
-
-```text
-LRAD_GCS_MSG
-LRAD_MIN_RADIUS
-LRAD_MAX_RADIUS
-LRAD_RADIUS_DZ
-LRAD_UNITS
-```
-
-Assign:
-
-```text
-RC Option 300
-```
-
-to a transmitter knob.
+Enable Lua scripting, configure the `LRAD_*` parameters, and assign RC Option 300 to a transmitter knob.
 
 On startup, the script reports its version and selected units, for example:
 
@@ -223,7 +243,7 @@ On startup, the script reports its version and selected units, for example:
 LRAD v1.2: Loaded (Feet)
 ```
 
-See `Documentation/INSTALLATION.md` for complete setup and testing instructions.
+See `Documentation/INSTALLATION.md` for installation instructions.
 
 ---
 
@@ -296,7 +316,7 @@ Users with other ArduPilot-supported flight controllers should build their own f
 
 Detailed information is available in:
 
-* Installation and Lua configuration
+* Installation instructions
   `Documentation/INSTALLATION.md`
 
 * Firmware compatibility
