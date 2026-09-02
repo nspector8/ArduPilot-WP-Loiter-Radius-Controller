@@ -49,16 +49,6 @@ The patch must be applied to a compatible ArduPilot source version. The included
 
 ---
 
-## Portable Components
-
-The following component is hardware independent:
-
-### LRAD_v1.2.lua
-
-The Lua script can be used on any supported ArduPlane vehicle with Lua scripting enabled, subject to the normal resource and scripting capabilities of the target flight controller.
-
----
-
 ## Firmware Modification
 
 The firmware modification changes:
