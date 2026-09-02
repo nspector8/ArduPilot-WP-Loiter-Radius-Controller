@@ -17,7 +17,6 @@ A standalone ArduPilot Lua script that provides:
 * Intuitive scaling where increasing knob position always increases the physical loiter circle size
 * Deadzone protection
 * Validation of the MIN/MAX radius configuration
-* Once-only warnings for zero values, mismatched signs, and reversed absolute ranges
 * Detection and acceptance of external `WP_LOITER_RAD` changes
 * Knob-movement takeover after an external change
 * Optional GCS radius notifications
@@ -156,11 +155,9 @@ The script creates the following parameters in the `LRAD_` parameter table:
 
 1. Neither value may be `0`.
 2. Both values must have the same sign.
-3. If their absolute magnitudes are reversed, the script automatically swaps the absolute range and issues a warning.
+3. If their absolute magnitudes are reversed, the script automatically swaps the absolute range and reports the condition.
 
 Invalid zero or mixed-sign configurations are rejected. The controller does not change `WP_LOITER_RAD` while such an invalid configuration remains active.
-
-Each zero/sign/swap warning is issued only once per script run.
 
 ### Example configuration
 
@@ -447,9 +444,9 @@ Perform the following checks before flight:
 2. Verify the selected startup units in the load message.
 3. Confirm RC Option 300 is assigned to the intended knob.
 4. Test a valid MIN/MAX configuration with both values positive or both negative.
-5. Test a zero MIN/MAX value and confirm `LRAD: MIN/MAX cannot be zero` is reported once.
-6. Test mismatched MIN/MAX signs and confirm `LRAD: MIN/MAX signs must match` is reported once.
-7. Test reversed absolute MIN/MAX magnitudes and confirm `LRAD: MIN/MAX swapped` is reported once.
+5. Test a zero MIN/MAX value and confirm `LRAD: MIN/MAX cannot be zero` is reported.
+6. Test mismatched MIN/MAX signs and confirm `LRAD: MIN/MAX signs must match` is reported.
+7. Test reversed absolute MIN/MAX magnitudes and confirm `LRAD: MIN/MAX swapped` is reported.
 8. Correct the configuration and verify normal radius control resumes.
 9. Move the knob through its range and verify the physical radius increases as the knob is increased.
 10. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
