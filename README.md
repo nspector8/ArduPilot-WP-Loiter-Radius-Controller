@@ -27,7 +27,6 @@ Features:
 * Invalid zero-radius MIN/MAX configurations are rejected with a warning
 * Mismatched MIN/MAX signs are rejected with a warning
 * Reversed absolute MIN/MAX ranges are automatically swapped with a warning
-* Validation warnings are issued once per script run for each condition
 * External `WP_LOITER_RAD` changes are detected and temporarily accepted
 * Knob movement takes control back after an external parameter change
 * Optional GCS radius notifications
@@ -88,7 +87,7 @@ The MIN/MAX configuration has three validation rules:
 * The two values must have matching signs.
 * If their absolute magnitudes are reversed, the script automatically swaps the range.
 
-Invalid zero or mixed-sign configurations are rejected and the current `WP_LOITER_RAD` value is not changed by the controller until the configuration is corrected. Each warning is sent only once per script run.
+Invalid zero or mixed-sign configurations are rejected and the current `WP_LOITER_RAD` value is not changed by the controller until the configuration is corrected.
 
 If the absolute values of the configured minimum and maximum are reversed, the script automatically swaps them and reports:
 
