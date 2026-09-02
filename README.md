@@ -17,7 +17,7 @@ The Lua script (`LRAD_v1.2.lua`) provides:
 * RC transmitter control of `WP_LOITER_RAD` using RC Option 300
 * Initial knob position as the starting loiter radius
 * Configurable minimum and maximum radius limits
-* Positive and negative loiter radius support
+* Positive and negative loiter radius support for right-hand and left-hand loiters
 * Increasing knob position always produces a larger physical loiter circle
 * Deadzone protection
 * Validation of zero and mismatched-sign MIN/MAX configurations
