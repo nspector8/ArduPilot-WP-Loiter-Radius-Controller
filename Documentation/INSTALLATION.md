@@ -16,6 +16,8 @@ A standalone ArduPilot Lua script that provides:
 * Positive or negative loiter-radius support
 * Intuitive scaling where increasing knob position always increases the physical loiter circle size
 * Deadzone protection
+* Validation of the MIN/MAX radius configuration
+* Once-only warnings for zero values, mismatched signs, and reversed absolute ranges
 * Detection and acceptance of external `WP_LOITER_RAD` changes
 * Knob-movement takeover after an external change
 * Optional GCS radius notifications
@@ -86,7 +88,7 @@ Lua script:
 Lua/LRAD_v1.2.lua
 ```
 
-Copy it to:
+Copy the revised `LRAD_v1.2.lua` from the current release assets to:
 
 ```text
 /APM/scripts/
@@ -142,11 +144,23 @@ The script creates the following parameters in the `LRAD_` parameter table:
 
 | Parameter | Default | Description |
 | --- | ---: | --- |
-| `LRAD_MIN_RADIUS` | `-90` | Minimum absolute loiter radius used by the knob range |
-| `LRAD_MAX_RADIUS` | `-180` | Maximum absolute loiter radius used by the knob range |
+| `LRAD_MIN_RADIUS` | `-90` | Minimum signed radius used by the knob range |
+| `LRAD_MAX_RADIUS` | `-180` | Maximum signed radius used by the knob range |
 | `LRAD_RADIUS_DZ` | `2` | Minimum radius change required before the script updates `WP_LOITER_RAD` |
 | `LRAD_GCS_MSG` | `1` | GCS radius message control: `0` off, `1` on |
 | `LRAD_UNITS` | `1` | GCS message units: `0` meters, `1` feet |
+
+### MIN/MAX configuration rules
+
+`LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` must satisfy all of the following:
+
+1. Neither value may be `0`.
+2. Both values must have the same sign.
+3. If their absolute magnitudes are reversed, the script automatically swaps the absolute range and issues a warning.
+
+Invalid zero or mixed-sign configurations are rejected. The controller does not change `WP_LOITER_RAD` while such an invalid configuration remains active.
+
+Each zero/sign/swap warning is issued only once per script run.
 
 ### Example configuration
 
@@ -162,10 +176,22 @@ LRAD_UNITS = 1
 
 Because the script works from the absolute radius values, the higher knob position corresponds to `-180`, while the lower knob position corresponds to `-90`. The resulting circle therefore becomes larger as the knob is increased.
 
-If `MIN_RADIUS` and `MAX_RADIUS` have reversed absolute magnitudes, the script automatically swaps the range and sends:
+If the absolute values are reversed, the script automatically swaps them and sends:
 
 ```text
 LRAD: MIN/MAX swapped
+```
+
+For an invalid configuration with a zero value, the script reports:
+
+```text
+LRAD: MIN/MAX cannot be zero
+```
+
+For an invalid configuration with mismatched signs, the script reports:
+
+```text
+LRAD: MIN/MAX signs must match
 ```
 
 ---
@@ -227,13 +253,13 @@ Values:
 Radius updates are sent in the form:
 
 ```text
-R: 300
+R:300
 ```
 
 or:
 
 ```text
-R: -300
+R:-300
 ```
 
 Messages are rate-limited to approximately one per second.
@@ -268,8 +294,8 @@ Values:
 The displayed sign is preserved:
 
 ```text
-R: 984
-R: -984
+R:984
+R:-984
 ```
 
 The unit selection only affects the Lua GCS message. It does not change the underlying `WP_LOITER_RAD` parameter, which remains in ArduPilot's native units.
@@ -420,25 +446,30 @@ Perform the following checks before flight:
 1. Confirm the Lua script loads and reports `LRAD v1.2`.
 2. Verify the selected startup units in the load message.
 3. Confirm RC Option 300 is assigned to the intended knob.
-4. Move the knob through its range and verify the physical radius increases as the knob is increased.
-5. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
-6. Verify the configured minimum and maximum radius are respected.
-7. Verify the deadzone prevents unnecessary updates.
-8. Change `WP_LOITER_RAD` externally and confirm the Lua controller accepts the change without immediately overwriting it.
-9. Move the knob and confirm Lua control resumes.
-10. If GCS messages are enabled, verify messages use the selected units.
-11. If using the custom OSD firmware, verify the OSD matches the active `WP_LOITER_RAD` value and selected OSD units.
+4. Test a valid MIN/MAX configuration with both values positive or both negative.
+5. Test a zero MIN/MAX value and confirm `LRAD: MIN/MAX cannot be zero` is reported once.
+6. Test mismatched MIN/MAX signs and confirm `LRAD: MIN/MAX signs must match` is reported once.
+7. Test reversed absolute MIN/MAX magnitudes and confirm `LRAD: MIN/MAX swapped` is reported once.
+8. Correct the configuration and verify normal radius control resumes.
+9. Move the knob through its range and verify the physical radius increases as the knob is increased.
+10. Verify positive values produce right-hand loiters and negative values produce left-hand loiters.
+11. Verify the configured minimum and maximum radius are respected.
+12. Verify the deadzone prevents unnecessary updates.
+13. Change `WP_LOITER_RAD` externally and confirm the Lua controller accepts the change without immediately overwriting it.
+14. Move the knob and confirm Lua control resumes.
+15. If GCS messages are enabled, verify messages use the selected units and `R:` format.
+16. If using the custom OSD firmware, verify the OSD matches the active `WP_LOITER_RAD` value and selected OSD units.
 
 Example GCS messages:
 
 ```text
-R: 300
+R:300
 ```
 
 or:
 
 ```text
-R: -300
+R:-300
 ```
 
 Example OSD displays:
@@ -466,6 +497,7 @@ Before operational flight, verify:
 * Correct loiter direction
 * Correct radius scaling
 * Correct startup knob behavior
+* Correct MIN/MAX validation behavior
 * Correct external-parameter takeover behavior
 * Correct RC control operation
 * Correct GCS message behavior
