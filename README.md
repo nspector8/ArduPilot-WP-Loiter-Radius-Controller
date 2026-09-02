@@ -24,6 +24,10 @@ Features:
 * Negative values create left-hand loiters
 * Increasing knob position always increases the physical loiter circle size
 * Deadzone protection reduces unnecessary parameter updates
+* Invalid zero-radius MIN/MAX configurations are rejected with a warning
+* Mismatched MIN/MAX signs are rejected with a warning
+* Reversed absolute MIN/MAX ranges are automatically swapped with a warning
+* Validation warnings are issued once per script run for each condition
 * External `WP_LOITER_RAD` changes are detected and temporarily accepted
 * Knob movement takes control back after an external parameter change
 * Optional GCS radius notifications
@@ -44,8 +48,8 @@ The Lua script preserves ArduPilot's standard loiter direction convention.
 Radius messages use the format:
 
 ```text
-R: 300
-R: -300
+R:300
+R:-300
 ```
 
 The script limits radius messages to approximately one per second.
@@ -77,6 +81,14 @@ LRAD_MAX_RADIUS = -180
 ```
 
 the controller treats the absolute values as a range from 90 to 180 meters and applies the negative sign to preserve left-hand loiter direction. The lower knob position produces the smaller circle and the higher knob position produces the larger circle.
+
+The MIN/MAX configuration has three validation rules:
+
+* Neither `LRAD_MIN_RADIUS` nor `LRAD_MAX_RADIUS` may be zero.
+* The two values must have matching signs.
+* If their absolute magnitudes are reversed, the script automatically swaps the range.
+
+Invalid zero or mixed-sign configurations are rejected and the current `WP_LOITER_RAD` value is not changed by the controller until the configuration is corrected. Each warning is sent only once per script run.
 
 If the absolute values of the configured minimum and maximum are reversed, the script automatically swaps them and reports:
 
@@ -182,13 +194,7 @@ ArduPilot-WP-Loiter-Radius-Controller
 
 ## Lua Script
 
-Copy:
-
-```text
-Lua/LRAD_v1.2.lua
-```
-
-to the ArduPilot scripts directory:
+Copy the revised `LRAD_v1.2.lua` release asset to the ArduPilot scripts directory:
 
 ```text
 /APM/scripts/
