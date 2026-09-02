@@ -175,7 +175,6 @@ The v1.2 script validates the radius configuration before calculating the knob-s
 - `LRAD_MIN_RADIUS` and `LRAD_MAX_RADIUS` cannot be zero.
 - The two values must have matching signs.
 - Reversed absolute magnitudes are automatically swapped.
-- Each zero/sign/swap warning is issued once per script run.
 
 ---
 
