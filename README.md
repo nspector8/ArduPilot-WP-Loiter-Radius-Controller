@@ -247,7 +247,7 @@ See `Documentation/INSTALLATION.md` for installation instructions.
 
 ## Optional OSD Firmware
 
-For pilots who want FPV display feedback, flash:
+For pilots who prefer to have the loiter radius displayed as an OSD element, flash:
 
 ```text
 Firmware/arduplane-WPLR-OSD.apj
