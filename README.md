@@ -323,9 +323,6 @@ Detailed information is available in:
 * Custom firmware building
   `Documentation/BUILDING_CUSTOM_FIRMWARE.md`
 
-* AP_OSD modification patch
-  `Patches/WP_LOITER_RAD_OSD.patch`
-
 ---
 
 # Purpose
