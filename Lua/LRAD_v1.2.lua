@@ -12,6 +12,7 @@ Features:
 - Supports positive or negative loiter radii
 - Larger knob position always = larger loiter circle
 - Deadzone protection
+- Warning if MIN/MAX radius signs do not match or either value is zero
 - External WP_LOITER_RAD changes are detected and accepted
 - Knob movement takes control back after an external change
 - Optional GCS message display
