@@ -116,7 +116,7 @@ The included firmware:
 Firmware/arduplane-WPLR-OSD.apj
 ```
 
-was built specifically for:
+was built specifically for ArduPlane 4.7.1 on:
 
 ```text
 TBS LUCID H7 WING
