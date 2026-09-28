@@ -18,7 +18,7 @@ The firmware file:
 Firmware/arduplane-WPLR-OSD.apj
 ```
 
-is a custom ArduPlane 4.7.x build created for:
+is a custom ArduPlane 4.7.1 build created for:
 
 - TBS LUCID H7 WING flight controller
 
