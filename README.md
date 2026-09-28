@@ -144,7 +144,7 @@ The OSD units are controlled independently by the firmware parameter `LOITRAD_UN
 
 The OSD reads the active `WP_LOITER_RAD` directly, regardless of whether it was changed by Lua, a ground station, or another ArduPilot function.
 
-The included firmware is a custom ArduPlane 4.7.x build for the **TBS LUCID H7 WING**. Users with other supported flight controllers should build their own firmware using the included AP_OSD modification patch.
+The included firmware is a custom ArduPlane 4.7.1 build for the **TBS LUCID H7 WING**. Users with other supported flight controllers should build their own firmware using the included AP_OSD modification patch.
 
 For pilots who prefer to have the loiter radius displayed as an OSD element, flash:
 
@@ -221,7 +221,7 @@ The Lua script targets ArduPlane 4.7.x+ and requires a supported ArduPilot vehic
 
 ## Firmware
 
-The included firmware is a custom ArduPlane 4.7.x build for the **TBS LUCID H7 WING**. Other supported flight controllers require a custom build using the included AP_OSD modification patch.
+The included firmware is a custom ArduPlane 4.7.1 build for the **TBS LUCID H7 WING**. Other supported flight controllers require a custom build using the included AP_OSD modification patch.
 
 ---
 
