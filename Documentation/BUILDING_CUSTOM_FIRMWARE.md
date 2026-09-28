@@ -28,7 +28,7 @@ You will need:
 - ArduPilot build tools
 - A supported ArduPilot flight-controller target
 
-The included OSD patch was developed against the ArduPlane 4.7.x code used by this project. When using a different ArduPilot revision, the patch may require manual adjustment if the affected OSD source files have changed.
+The included OSD patch was developed against the ArduPlane 4.7.1 code used by this project. When using a different ArduPilot revision, the patch may require manual adjustment if the affected OSD source files have changed.
 
 ---
 
