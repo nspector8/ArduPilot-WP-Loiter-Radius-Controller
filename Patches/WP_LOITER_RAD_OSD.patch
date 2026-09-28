@@ -54,9 +54,6 @@ index 97e3831b2d..a5062db859 100644
      AP_GROUPEND
  };
  
-     AP_GROUPEND
- };
- 
 @@ -1058,6 +1058,14 @@ const AP_Param::GroupInfo AP_OSD_Screen::var_info2[] = {
      AP_GROUPINFO_FLAGS("ENABLE", 2, AP_OSD_Screen, enabled, 0, AP_PARAM_FLAG_ENABLE | AP_PARAM_FLAG_HIDDEN),
  
