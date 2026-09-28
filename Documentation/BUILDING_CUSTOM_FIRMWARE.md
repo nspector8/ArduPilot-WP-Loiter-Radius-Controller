@@ -28,7 +28,19 @@ You will need:
 - ArduPilot build tools
 - A supported ArduPilot flight-controller target
 
-The included OSD patch was developed against the ArduPlane 4.7.1 code used by this project. When using a different ArduPilot revision, the patch may require manual adjustment if the affected OSD source files have changed.
+The included OSD patch was developed against **ArduPilot Plane-4.7.1**, commit:
+
+```
+dbe792162d06cab66c3475fd5556bf7a120f119e
+```
+
+The supplied firmware was built from this exact source revision for the ArduPilot board target:
+
+```
+TBS_LUCID_H7_WING
+```
+
+When using a different ArduPilot revision, the patch may require manual adjustment if the affected OSD source files have changed.
 
 ---
 
@@ -58,7 +70,24 @@ Reload the environment:
 . ~/.profile
 ```
 
-For reproducible builds, check out the ArduPilot source revision appropriate for the firmware version you intend to build before applying the patch.
+For a build matching the supplied firmware, check out the exact **Plane-4.7.1** source revision before applying the patch:
+
+```bash
+git fetch https://github.com/ArduPilot/ardupilot.git refs/tags/Plane-4.7.1:refs/tags/Plane-4.7.1
+git checkout Plane-4.7.1
+```
+
+Verify the source revision:
+
+```bash
+git rev-parse HEAD
+```
+
+It should report:
+
+```text
+dbe792162d06cab66c3475fd5556bf7a120f119e
+```
 
 ---
 
@@ -99,6 +128,20 @@ Configure ArduPilot for the exact hardware target you are using:
 ```
 
 Replace `<board>` with the appropriate ArduPilot board target.
+
+For the same hardware target as the supplied firmware:
+
+```bash
+./waf configure --board TBS_LUCID_H7_WING
+```
+
+Then build ArduPlane:
+
+```bash
+./waf plane
+```
+
+This produces the same board-specific firmware target used for the included `Firmware/arduplane-WPLR-OSD.apj`.
 
 For example, the exact board target for your hardware can be identified from the ArduPilot board documentation or build configuration.
 
