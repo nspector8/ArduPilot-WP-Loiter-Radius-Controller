@@ -45,7 +45,7 @@ Examples of other ArduPilot-supported hardware include:
 - Pixhawk family
 - Other ArduPilot-supported flight controllers
 
-The patch must be applied to a compatible ArduPilot source version. The included patch is associated with the ArduPlane 4.7.x firmware used by this project; patch application may require adjustment when building against a different ArduPilot source revision.
+The patch must be applied to a compatible ArduPilot source version. The included patch is associated with the ArduPlane 4.7.1 firmware used by this project; patch application may require adjustment when building against a different ArduPilot source revision.
 
 ---
 
