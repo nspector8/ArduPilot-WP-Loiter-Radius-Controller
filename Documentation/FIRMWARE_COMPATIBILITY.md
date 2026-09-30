@@ -18,7 +18,7 @@ The firmware file:
 Firmware/arduplane-WPLR-OSD.apj
 ```
 
-is a custom ArduPlane 4.7.1 build created for:
+is a custom ArduPlane 4.7.0 build created for:
 
 - TBS LUCID H7 WING flight controller
 
@@ -45,7 +45,7 @@ Examples of other ArduPilot-supported hardware include:
 - Pixhawk family
 - Other ArduPilot-supported flight controllers
 
-The patch must be applied to a compatible ArduPilot source version. The included patch is associated with the ArduPlane 4.7.1 firmware used by this project; patch application may require adjustment when building against a different ArduPilot source revision.
+The patch must be applied to a compatible ArduPilot source version. The included patch is associated with the ArduPlane 4.7.0 firmware used by this project; patch application may require adjustment when building against a different ArduPilot source revision.
 
 ---
 

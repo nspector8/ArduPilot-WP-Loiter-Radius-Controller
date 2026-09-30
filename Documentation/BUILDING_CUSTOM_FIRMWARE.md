@@ -28,7 +28,7 @@ You will need:
 - ArduPilot build tools
 - A supported ArduPilot flight-controller target
 
-The included OSD patch was developed against **ArduPilot Plane-4.7.1**, commit:
+The included OSD patch was developed against **ArduPilot Plane-4.7.0**, commit:
 
 ```
 dbe792162d06cab66c3475fd5556bf7a120f119e
@@ -70,11 +70,11 @@ Reload the environment:
 . ~/.profile
 ```
 
-For a build matching the supplied firmware, check out the exact **Plane-4.7.1** source revision before applying the patch:
+For a build matching the supplied firmware, check out the exact **Plane-4.7.0** source revision before applying the patch:
 
 ```bash
-git fetch https://github.com/ArduPilot/ardupilot.git refs/tags/Plane-4.7.1:refs/tags/Plane-4.7.1
-git checkout Plane-4.7.1
+git fetch https://github.com/ArduPilot/ardupilot.git refs/tags/Plane-4.7.0:refs/tags/Plane-4.7.0
+git checkout Plane-4.7.0
 ```
 
 Verify the source revision:
