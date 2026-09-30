@@ -28,17 +28,7 @@ You will need:
 - ArduPilot build tools
 - A supported ArduPilot flight-controller target
 
-The included OSD patch was developed against **ArduPilot Plane-4.7.0**, commit:
-
-```
-dbe792162d06cab66c3475fd5556bf7a120f119e
-```
-
-The supplied firmware was built from this exact source revision for the ArduPilot board target:
-
-```
-TBS_LUCID_H7_WING
-```
+The included OSD patch is associated with the ArduPlane 4.7.0 firmware used by this project.
 
 When using a different ArduPilot revision, the patch may require manual adjustment if the affected OSD source files have changed.
 
